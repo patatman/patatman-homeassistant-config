@@ -1,0 +1,114 @@
+homeassistant:
+  latitude: !secret lat 
+  longitude: !secret long 
+  elevation: 430
+  unit_system: metric
+  time_zone: Europe/Amsterdam
+  customize: !include customize.yaml
+
+http:
+  api_password: !secret http_password
+
+cloud:
+  google_actions:
+    filter:
+      include_entities:
+        - light.hallway_3
+        - light.christmas_tree
+        - light.outdoor_light
+        - light.kitchen_ledstrip
+        - light.window_light
+
+frontend:
+
+discovery:
+
+notify:
+  - name: "Pushbullet 1"
+    platform: pushbullet
+    api_key: !secret pushapi
+  - name: "Pushbullet 2"
+    platform: pushbullet
+    api_key: !secret pushapi2
+
+sun:
+logbook: 
+config:
+
+influxdb:
+  host: 192.168.1.80
+
+nest:
+  client_id: !secret nest_id
+  client_secret: !secret nest_secret
+
+climate:
+  - platform: honeywell
+    username: !secret honeywell_user
+    password: !secret honeywell_pass
+    scan_interval: 600
+
+rflink:
+  port: /dev/ttyUSB0
+
+map:
+
+tts:
+  - platform: google
+
+xiaomi_aqara:
+  discovery_retry: 10
+  gateways:
+    - key: !secret aqara_password
+
+vacuum:
+  - platform: xiaomi_miio
+    name: miep
+    host: 192.168.1.34
+    token: !secret miiotoken
+
+octoprint:
+    host: 192.168.1.75
+    api_key: !secret octo-api
+
+ffmpeg:
+
+input_number:
+  falcon_animation_speed:
+    name: Falcon Animation Speed
+    initial: 150
+    min: 1
+    max: 150
+    step: 10
+
+  kossel_animation_speed:
+    name: Kossel Animation Speed
+    initial: 150
+    min: 1
+    max: 150
+    step: 10
+
+media_player:
+  - platform: spotify
+    client_id: !secret spotify_client 
+    client_secret: !secret spotify
+
+camera: !inlcude_dir_merge_list camera
+     
+light: !inlcude_dir_merge_list lights
+
+sensor: !inlcude_dir_merge_list sensors
+
+
+weather:
+  - platform: yweather
+
+#logger:
+#  default: error
+#  logs:
+#    homeassistant.components.http.view: debug
+
+group: !include groups.yaml
+automation: !include automations.yaml
+
+script: !include scripts.yaml

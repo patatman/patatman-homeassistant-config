@@ -1,0 +1,35 @@
+  - platform: mqtt
+    name: "Basement Temperature"
+    state_topic: "tele/sonoff1/SENSOR"
+    value_template: "{{ value_json['AM2301'].Temperature }}"
+    unit_of_measurement: "°C"
+
+  - platform: mqtt
+    name: "Basement Humidity"
+    state_topic: "tele/sonoff1/SENSOR"
+    value_template: "{{ value_json['AM2301'].Humidity }}"
+    unit_of_measurement: "%"
+
+  - platform: mqtt
+    name: "Fireplace Energy"
+    state_topic: "tele/sonoff2/SENSOR"
+    value_template: '{{ value_json["ENERGY"]["Today"] }}'
+    unit_of_measurement: "kWh"
+
+  - platform: mqtt
+    name: "Fireplace Power"
+    state_topic: "tele/sonoff2/SENSOR"
+    value_template: '{{ value_json["ENERGY"]["Power"] }}'
+    unit_of_measurement: "W"
+
+  - platform: mqtt
+    name: "Fireplace Voltage"
+    state_topic: "tele/sonoff2/SENSOR"
+    value_template: '{{ value_json["ENERGY"]["Voltage"] }}'
+    unit_of_measurement: "V"
+
+  - platform: mqtt
+    name: "Fireplace Current"
+    state_topic: "tele/sonoff2/SENSOR"
+    value_template: '{{ value_json["ENERGY"]["Current"] }}'
+    unit_of_measurement: "A"

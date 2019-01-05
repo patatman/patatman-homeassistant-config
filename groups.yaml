@@ -1,0 +1,125 @@
+  #default_view:
+  #  view: yes
+  #  icon: mdi:home
+  #  entities:
+  #    - group.kitchen
+  #    - group.livingroom
+#     - group.upstairs
+
+  livingroom:
+    view: yes
+    name: Livingroom
+    entities:
+      - light.kitchen
+      - group.livingroom_group
+  upstairs:
+    view: yes
+    name: Upstairs
+    entities:
+      - group.bathroom_group
+  bathroom:
+    name: bathroom
+    icon: mdi:shower
+    entities:
+      - group.bathroom_group
+  kitchen:
+    view: yes
+    name: Kitchen
+    entities:
+      - light.tradfri_bulb_gu10_w_400lm_10
+      - light.tradfri_bulb_gu10_w_400lm_9
+      - light.kitchen
+
+  bathroom_group:
+    name: "Bathroom lights"
+    entities:
+      - light.bathroom1
+      - light.bathroom2
+      - light.bathroom3
+  livingroom_group:
+     name: Livingroom_group
+     entities:
+       - light.little_lamp
+       - light.couch
+       - light.fireplace
+       - light.window
+       - light.tv
+       - light.tradfri_bulb_gu10_w_400lm_10
+       - light.tradfri_bulb_gu10_w_400lm_9
+
+  solarinverter: 
+    name: "solar inverter"
+    entities:
+      - sensor.energy_today
+      - sensor.energy_total
+      - sensor.time_today
+      - sensor.time_total
+      - sensor.inverter_temperature
+      - sensor.inverter_state
+  motion:
+    name: motion
+    entities:
+      - binary_sensor.door_window_sensor_158d0002133b59
+      - binary_sensor.door_window_sensor_158d0002254443
+      - binary_sensor.motion_sensor_158d0001a92381
+      - binary_sensor.motion_sensor_158d0001e55662
+      - binary_sensor.motion_sensor_158d0001e56350
+      - sensor.illumination_158d0001e55662
+  Climate_temp:
+    name: "Climate Temperature"
+    entities:
+      - sensor.basement_temperature
+      - sensor.temperature_158d00022c9653
+      - sensor.temperature_158d00022b6766
+      - sensor.temperature_158d00022cc752
+  Climate_hum:
+    name: "Climate Humidity"
+    entities:
+      - sensor.basement_humidity
+      - sensor.humidity_158d00022c9653
+      - sensor.humidity_158d00022b6766
+      - sensor.humidity_158d00022cc752
+  Weather:
+    name: Weather
+    entities:
+      - sensor.pws_weather
+      - sensor.pws_alerts
+      - sensor.pws_feelslike_c
+      - sensor.pws_temp_c
+      - sensor.pws_uv
+
+  office_lights:
+    name: "Office lights"
+    entities:
+      - light.officeleft
+      - light.officeright
+  kitchenspots:
+    name: Kitchenspots
+    entities:
+      - light.kitchen1
+      - light.kitchen2
+
+  upstairs_spots:
+    name: upstairspots
+    entities: 
+      - light.hallway1
+      - light.hallway2
+     
+  hallway:
+    name: hallway
+    entities:
+      - light.tradfri_bulb_gu10_w_400lm_11
+      - light.tradfri_bulb_gu10_w_400lm_12
+      - light.hallway_3
+  meter_readings:
+    name: "Meter readings"
+    entities:
+      - sensor.power_consumption_low
+      - sensor.power_consumption_normal
+      - sensor.power_production_low
+      - sensor.power_production_normal
+      - sensor.gas_consumption
+    
+#  upstairs:
+#    name: upstairs
+#    view: yes

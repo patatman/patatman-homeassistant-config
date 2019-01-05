@@ -1,0 +1,14 @@
+  - platform: rflink
+    device_defaults:
+      fire_event: true
+      signal_repetitions: 2
+    devices:
+      ab400d_60_1:
+        name: christmas tree
+      ab400d_60_2:
+        name: outdoor light
+      ab400d_60_4:
+        name: window light
+      ab400d_60_3:
+        name: kitchen ledstrip
+    automatic_add: false

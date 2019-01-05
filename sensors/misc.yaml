@@ -1,0 +1,10 @@
+  - platform: seventeentrack
+    username: !secret seventeentrack_un
+    password: !secret seventeentrack_pw
+
+  - platform: launch_library
+
+  - platform: dsmr
+    host: 192.168.1.32
+    port: 2001
+    dsmr_version: 4

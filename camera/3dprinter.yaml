@@ -1,0 +1,2 @@
+   - platform: ffmpeg
+     input: http://192.168.1.75/webcam/?action=stream

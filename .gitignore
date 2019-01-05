@@ -1,0 +1,45 @@
+# Extensions
+*.uuid
+*.conf
+*.db
+*.db-journal
+*.noload
+*.txt
+*.sqlite
+*.xml
+*.log
+*.backup
+*.mp3
+
+# Folders
+.cloud
+.HA_VERSION
+.storage
+.google.token
+www
+zones
+deps
+tmp
+__pycache__
+tensorflow
+security
+video
+tts
+
+# Files
+secrets.yaml
+known_devices.yaml
+entity_registry.yaml
+ip_bans.yaml
+smartyone_nl.pem
+server.pem
+home-assistant_v2.db-shm
+home-assistant_v2.db-wal
+image_processing.yaml
+.tradfri_psk.conf
+.spotify-token-cache
+.ios.conf
+
+# For security reasons
+cameras
+camera.yaml

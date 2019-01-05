@@ -1,0 +1,20 @@
+#currently not in use, still need to optimize.
+
+#  - platform: local_file
+#    file_path: /config/video/voordeur_latest.jpg
+#    name: tf_voordeur
+#  - platform: local_file
+#    file_path: /config/video/zijdeur_latest.jpg
+#    name: tf_zijdeur
+
+# Example configuration.yaml entry
+#image_processing:
+#  - platform: tensorflow
+#    source:
+#      - entity_id: camera.voordeur
+#      - entity_id: camera.zijdeur
+#    file_out:
+#      - "/config/video/{{ camera_entity.split('.')[1] }}_latest.jpg"
+#      - "/config/video/{{ camera_entity.split('.')[1] }}_{{ now().strftime('%Y%m%d_%H%M%S') }}.jpg"
+#    model:
+#      graph: /config/tensorflow/frozen_inference_graph.pb

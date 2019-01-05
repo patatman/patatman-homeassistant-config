@@ -1,0 +1,17 @@
+title: 3d printer
+icon: mdi:printer-3d
+cards:
+  - type: entities
+    entities:
+      - sensor.octoprint_actual_bed_temp
+      - sensor.octoprint_actual_tool0_temp
+      - sensor.octoprint_current_state
+      - sensor.octoprint_job_percentage
+      - sensor.octoprint_target_bed_temp
+      - sensor.octoprint_target_tool0_temp
+      - sensor.octoprint_time_elapsed_format
+      - sensor.octoprint_time_remaining_format
+  - type: picture-entity
+    entity: camera.ffmpeg
+    show_state: false
+    show_name: false

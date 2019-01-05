@@ -1,0 +1,355 @@
+- alias: Falcon Animation Speed
+  initial_state: true
+  hide_entity: false
+  trigger:
+  - platform: state
+    entity_id: input_slider.falcon_animation_speed
+  action:
+  - service: mqtt.publish
+    data_template:
+      topic: light/falcon/set
+      payload: '{"transition":{{ trigger.to_state.state | int }}}'
+  id: ea5948cf7c4e44c0a5399d18f84421cf
+- alias: Kossel Animation Speed
+  initial_state: true
+  hide_entity: false
+  trigger:
+  - platform: state
+    entity_id: input_slider.kossel_animation_speed
+  action:
+  - service: mqtt.publish
+    data_template:
+      topic: light/kossel/set
+      payload: '{"transition":{{ trigger.to_state.state | int }}}'
+  id: e8719aeb9749442eb5283530dfdef9f6
+- id: '1519381563349'
+  alias: Doorbell(Nighttime)
+  trigger:
+  - entity_id: binary_sensor.door_window_sensor_158d0002254184
+    from: 'on'
+    platform: state
+    to: 'off'
+  condition:
+  - condition: state
+    entity_id: sun.sun
+    state: below_horizon
+  action:
+  - data:
+      gw_mac: 78:11:DC:B2:77:10
+      ringtone_id: '10'
+    service: xiaomi_aqara.play_ringtone
+  - data:
+      message: Er staat iemand voor de deur
+      title: Deurbel
+    service: notify.ios_iphone_pim
+  - data:
+      message: Er staat iemand voor de deur
+      title: Deurbel
+    service: notify.pushbullet_2
+  - data:
+      entity_id: media_player.googlehome0631
+      media_content_id: http://www.orangefreesounds.com/wp-content/uploads/2017/07/Ding-dong-chime.mp3
+      media_content_type: music
+    service: media_player.play_media
+- id: '1519385245869'
+  alias: Doorbell(Daytime)
+  trigger:
+  - entity_id: binary_sensor.door_window_sensor_158d0002254184
+    from: 'on'
+    platform: state
+    to: 'off'
+  condition:
+  - condition: state
+    entity_id: sun.sun
+    state: above_horizon
+  action:
+  - data:
+      gw_mac: 78:11:DC:B2:77:10
+      ringtone_id: '10'
+    service: xiaomi_aqara.play_ringtone
+  - data:
+      message: Er staat iemand voor de deur
+      title: Deurbel
+    service: notify.pushbullet_2
+  - data:
+      entity_id: media_player.living_room_speaker
+      media_content_id: http://www.orangefreesounds.com/wp-content/uploads/2017/07/Ding-dong-chime.mp3
+      media_content_type: MUSIC
+    service: media_player.play_media
+  - data:
+      message: Er staat iemand voor de deur
+      title: Deurbel
+    service: notify.ios_iphone_pim
+- id: '1519398438205'
+  alias: Old speaker lower volume
+  trigger:
+  - event_data:
+      click_type: single
+      event_id: binary_sensor.switch_158d000210ec53
+    event_type: click
+    platform: event
+  condition: []
+  action:
+  - data:
+      entity_id: media_player.old_speaker
+    service: media_player.volume_down
+- action:
+  - data:
+      entity_id: media_player.old_speaker
+    service: media_player.volume_up
+  alias: Old speaker Higher volume
+  condition: []
+  id: '1519747883360'
+  trigger:
+  - event_data:
+      click_type: double
+      event_id: binary_sensor.switch_158d000210ec53
+    event_type: click
+    platform: event
+- id: '1519760782392'
+  alias: Hallway motion
+  trigger:
+  - entity_id: binary_sensor.motion_sensor_158d0001a92381
+    from: 'off'
+    platform: state
+    to: 'on'
+  condition:
+  - condition: state
+    entity_id: sun.sun
+    state: below_horizon
+  action:
+  - data:
+      entity_id: group.hallway
+    service: light.turn_on
+- action:
+  - data:
+      entity_id: group.hallway
+    service: light.turn_off
+  alias: Hallway no motion
+  condition:
+  - condition: state
+    entity_id: sun.sun
+    state: below_horizon
+  id: '1519760817306'
+  trigger:
+  - entity_id: binary_sensor.motion_sensor_158d0001a92381
+    from: 'on'
+    platform: state
+    to: 'off'
+- action:
+  - data:
+      entity_id: group.livingroom
+    service: light.turn_on
+  alias: Hallway Morning
+  condition:
+  - condition: state
+    entity_id: sun.sun
+    state: below_horizon
+  - after: '6:00'
+    before: '8:00'
+    condition: time
+  id: '1520200724100'
+  trigger:
+  - entity_id: binary_sensor.motion_sensor_158d0001a92381
+    from: 'off'
+    platform: state
+    to: 'on'
+- action:
+  - data:
+      entity_id: light.frondoor
+    service: light.turn_on
+  alias: Frontdoor
+  condition: []
+  trigger:
+  - entity_id: sun.sun
+    from: above_horizon
+    platform: state
+    to: below_horizon
+  id: '15202007345100'
+- action:
+  - data:
+      entity_id: light.sonoff_basement
+    service: light.turn_on
+  alias: Basement light on
+  condition: []
+  id: '1520251495193'
+  trigger:
+  - entity_id: binary_sensor.door_window_sensor_158d0002254443
+    from: 'off'
+    platform: state
+    to: 'on'
+- action:
+  - data:
+      entity_id: light.sonoff_basement
+    service: light.turn_off
+  alias: Basement light off
+  condition: []
+  id: '1520251539017'
+  trigger:
+  - entity_id: binary_sensor.door_window_sensor_158d0002254443
+    from: 'on'
+    platform: state
+    to: 'off'
+- action:
+  - data:
+      entity_id: group.kitchenspots
+    service: light.turn_on
+  alias: Kitchen motion
+  condition:
+  - condition: state
+    entity_id: sun.sun
+    state: below_horizon
+  id: '1528109786675'
+  trigger:
+  - entity_id: binary_sensor.motion_sensor_158d0001e55662
+    from: 'off'
+    platform: state
+    to: 'on'
+- action:
+  - data:
+      entity_id: group.kitchenspots
+    service: light.turn_off
+  alias: Kitchen no_motion
+  condition:
+  - condition: state
+    entity_id: sun.sun
+    state: below_horizon
+  id: '1528109853713'
+  trigger:
+  - entity_id: binary_sensor.motion_sensor_158d0001e55662
+    from: 'on'
+    platform: state
+    to: 'off'
+- id: '1528823416468'
+  alias: Upstairs Motion
+  trigger:
+  - entity_id: binary_sensor.motion_sensor_158d0001e56350
+    from: 'off'
+    platform: state
+    to: 'on'
+  condition:
+  - condition: state
+    entity_id: sun.sun
+    state: below_horizon
+  - before: '23:00'
+    condition: time
+  action:
+  - data:
+      entity_id: group.upstairs_spots
+    service: light.turn_on
+- action:
+  - data:
+      entity_id: group.upstairs_spots
+    service: light.turn_off
+  alias: Upstairs no motion
+  condition:
+  - condition: state
+    entity_id: sun.sun
+    state: below_horizon
+  id: '1528823457733'
+  trigger:
+  - entity_id: binary_sensor.motion_sensor_158d0001e56350
+    from: 'on'
+    platform: state
+    to: 'off'
+- action:
+  - data:
+      entity_id: group.bathroom_group
+    service: light.toggle
+  alias: Badkamer linkerknop
+  condition: []
+  id: '1529253871562'
+  trigger:
+  - event_data:
+      entity_id: binary_sensor.wall_switch_left_158d0001e06eb2
+      event_type: single
+    event_type: xiaomi_aqara.click
+    platform: event
+- id: '1542658779581'
+  alias: Upstairs Xiaomi
+  trigger:
+  - entity_id: binary_sensor.motion_sensor_158d0001e56350
+    from: 'off'
+    platform: state
+    to: 'on'
+  condition:
+  - after: sunset
+    condition: sun
+  - after: '23:00'
+    before: 04:00
+    condition: time
+  action:
+  - data:
+      brightness: '120'
+      color_name: red
+      entity_id: light.gateway_light_7811dcb27710
+    service: light.turn_on
+- id: '1542658864921'
+  alias: Upstairs Xiaomi off
+  trigger:
+  - entity_id: binary_sensor.motion_sensor_158d0001e56350
+    from: 'on'
+    platform: state
+    to: 'off'
+  condition:
+  - after: sunset
+    before: sunrise
+    condition: sun
+  action:
+  - data:
+      entity_id: light.gateway_light_7811dcb27710
+    service: light.turn_off
+- id: '1544304881668'
+  alias: Nieuwe automatisering
+  trigger:
+  - event_data:
+      entity_id: binary_sensor.wall_switch_left_158d0001e0a3f6
+      event_type: single
+    event_type: xiaomi_aqara.click
+    platform: event
+  condition: []
+  action:
+  - alias: ''
+    data:
+      entity_id: light.officerights
+    service: light.toggle
+- id: '1544305094328'
+  alias: office knop
+  trigger:
+  - event_data:
+      entity_id: binary_sensor.wall_switch_left_158d0001e0a3f6
+      event_type: single
+    event_type: xiaomi_aqara.click
+    platform: event
+  condition: []
+  action:
+  - data:
+      entity_id: group.office_lights
+    service: light.toggle
+  - data:
+      entity_id: light.falcon_light
+    service: light.toggle
+- id: '1546196514195'
+  alias: Octoprint-led
+  trigger:
+  - entity_id: binary_sensor.octoprint_printing
+    from: 'off'
+    platform: state
+    to: 'on'
+  condition: []
+  action:
+  - data:
+      entity_id: light.kossel_light
+    service: light.turn_on
+- id: '1546196538451'
+  alias: octo-print-off
+  trigger:
+  - entity_id: binary_sensor.octoprint_printing
+    from: 'on'
+    platform: state
+    to: 'off'
+  condition: []
+  action:
+  - data:
+      entity_id: light.kossel_light
+    service: light.turn_off
