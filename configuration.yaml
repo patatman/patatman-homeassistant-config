@@ -93,11 +93,11 @@ media_player:
     client_id: !secret spotify_client 
     client_secret: !secret spotify
 
-camera: !inlcude_dir_merge_list camera
+camera: !include_dir_merge_list camera
      
-light: !inlcude_dir_merge_list lights
+light: !include_dir_merge_list lights
 
-sensor: !inlcude_dir_merge_list sensors
+sensor: !include_dir_merge_list sensors
 
 
 weather:
