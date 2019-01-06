@@ -10,7 +10,7 @@
     payload_available: "Online"
     payload_not_available: "Offline"
     retain: true
- 
+
   - platform: mqtt_json
     name: "Falcon light"
     state_topic: "light/falcon"
