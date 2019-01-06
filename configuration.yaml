@@ -103,7 +103,8 @@ sensor: !include_dir_merge_list sensors
 
 
 weather:
-  - platform: yweather
+  - platform: darksky
+    api_key: !secret darksky
 
 #logger:
 #  default: error

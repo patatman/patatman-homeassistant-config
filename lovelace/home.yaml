@@ -36,9 +36,7 @@ cards:
     filter:
       include:
         - domain: climate
-  - type: custom:weather-card
-    entity_weather: weather.yweather
-    entity_sun: sun.sun  - type: vertical-stack
+  - type: vertical-stack
     cards:
       - type: picture-entity
         entity: camera.voordeur
