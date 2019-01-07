@@ -11,7 +11,7 @@
     payload_not_available: "Offline"
     retain: true
 
-  - platform: mqtt_json
+  - platform: mqtt
     name: "Falcon light"
     state_topic: "light/falcon"
     command_topic: "light/falcon/set"
@@ -41,7 +41,7 @@
     optimistic: false
     qos: 0
 
-  - platform: mqtt_json
+  - platform: mqtt
     name: "Kossel light"
     state_topic: "light/kossel"
     command_topic: "light/kossel/set"
