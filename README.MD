@@ -2,7 +2,7 @@
 
 Basic Home Assistant config, with regular updates
 
-<img align="right" src="./assets/hass.png?raw=true" height="170">
+<img align="right" src="./.assets/hass.png?raw=true" height="170">
 
 - over 20 different components
 - Updated love-lace
@@ -11,11 +11,11 @@ Basic Home Assistant config, with regular updates
 - Tutorials (coming soon!)
 
 [![Build Status](https://travis-ci.org/patatman/patatman-homeassistant-config.svg?branch=master)](https://travis-ci.org/patatman/patatman-homeassistant-config)
-[![GitHub Last Commit](https://img.shields.io/github/last-commit/patatman/patatman-homeassistant-config.svg)
-[![HA Version](https://img.shields.io/badge/Home%20Assistant-0.84.6-blue.svg)
+[![GitHub Last Commit](https://img.shields.io/github/last-commit/patatman/patatman-homeassistant-config.svg)]
+[![HA Version](https://img.shields.io/badge/Home%20Assistant-0.84.6-blue.svg)]
 
 ## Hardware
-To see a full list of Hardware, please see [Components](https://github.com/patatman/patatman-homeassistant-config/blob/master/components.md
+To see a full list of Hardware, please see [![Components](https://github.com/patatman/patatman-homeassistant-config/blob/master/components.md]
 ### Server
  #### Hardware
  - Intel core i3-6100
