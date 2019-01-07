@@ -47,7 +47,15 @@
    - 1 sonoff POW
    - 1 sonoff TH
 ### Server
-
+ #### Hardware
+ - Intel core i3-6100
+ - 16GB Ram
+ - 256GB SSD
+ - 4 TB disk
 ## Software
+ - Hyperviser: Proxmox
+ - VM's: 2
+   - Docker
+   - other (influx, grafana etc)
 
 ## Love-lace
