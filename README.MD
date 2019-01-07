@@ -1,5 +1,7 @@
 # Home Assistant Config
 
+[![Build Status](https://travis-ci.org/patatman/patatman-homeassistant-config.svg?branch=master)](https://travis-ci.org/patatman/patatman-homeassistant-config)
+
 ## Hardware
 ### Sensors/devices
  - Xiaomi Aqara
