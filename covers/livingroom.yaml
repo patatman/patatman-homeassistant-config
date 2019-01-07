@@ -1,0 +1,14 @@
+  - platform: mqtt
+    name: "livingroom roller"
+    state_topic: "shellies/shellyswitch-32B772/roller/0"    # Returns open,close while in motion, stop when not moving
+    command_topic: "shellies/shellyswitch-32B772/roller/0/command"  # Accepts open, close, stop
+    position_topic: "shellies/shellyswitch-32B772/roller/0/pos"
+    set_position_topic: "shellies/shellyswitch-32B772/roller/0/command/pos"
+    payload_open: "open"
+    payload_close: "close"
+    payload_stop: "stop"
+    state_open: "open"
+    state_closed: "close"
+    retain: true
+    optimistic: false
+    qos: 2

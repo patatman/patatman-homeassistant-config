@@ -3,15 +3,176 @@
 # https://github.com/dale3h/python-lovelace
 #
 
-# Monster card resource, weathercard and mini-media-player
+# Monster card resource
 resources:
   - url: /local/monster-card.js
+    type: js
+  - url: /local/custom_ui/weather-card.js
     type: js
   - url: /local/mini-media-player-bundle.js?v=0.9.5
     type: module
 
 title: Home
 views:
-  - !include lovelace/home.yaml
-  - !include lovelace/3dprinter.yaml
-  - !include lovelace/livingroom.yaml
+  - title: Home
+    cards:
+      - type: custom:monster-card
+        show_empty: true
+        card: 
+          type: entities
+          title: Motion Detected
+        filter:
+          include:
+            - domain: binary_sensor
+              state: 'on'
+      - type: custom:monster-card
+        show_empty: true
+        card:
+          type: entities
+          title: Lights On
+        filter:
+          include:
+            - domain: light
+              state: 'on'
+      - type: custom:monster-card
+        show_empty: true
+        card:
+          type: entities
+          title: Currently playing
+        filter: 
+          include:
+            - domain: media_player
+              state: 'playing'
+          exclude:
+            - entity_id: "media_player.spotify"
+      - type: custom:monster-card
+        card:
+          type: entities
+          title: Climate
+        filter:
+          include:
+            - domain: climate
+      - type: custom:weather-card
+        entity_weather: weather.yweather
+        entity_sun: sun.sun
+
+      - type: vertical-stack
+        cards:
+          - type: picture-entity
+            entity: camera.voordeur
+            show_state: false
+            show_name: false
+          - type: picture-entity
+            entity: camera.zijdeur
+            show_state: false
+            show_name: false
+          - type: picture-entity
+            entity: camera.front_door
+            show_state: false
+            show_name: false
+     
+      - type: entities
+        title: Media Players
+        entities:
+          - entity: media_player.bedroom_speaker
+            type: custom:mini-media-player
+            group: true
+          - entity: media_player.living_room_speaker
+            type: custom:mini-media-player
+            group: true
+          - entity: media_player.old_speaker
+            type: custom:mini-media-player
+            group: true
+          - entity: media_player.upstairs_speaker
+            type: custom:mini-media-player
+            group: true
+          - entity: media_player.googlehomehub2919
+            group: true
+      - type: entities
+        title: Media Player Groups
+        entities: 
+          - entity: media_player.livingroom_
+            type: custom:mini-media-player
+            artwork: cover
+            group: true
+          - entity: media_player.party
+            type: custom:mini-media-player
+            artwork: cover
+            power_color: true
+            group: true
+          - entity: media_player.upstairs
+            type: custom:mini-media-player
+            artwork: cover
+            group: true
+      - type: custom:mini-media-player
+        entity: media_player.spotify
+        name: Spotify player
+        artwork: cover
+        show_source: full
+        media_buttons:
+          - name: Easy on Sunday
+            type: playlist
+            url: spotify:user:spotify:playlist:37i9dQZF1DWZpGSuzrdTXg
+          - name: Joost New Releases
+            type: playlist
+            url: spotify:user:foost:playlist:7JLymXyQVjbeupuaapu95L
+          - name: De Yaylist
+            type: playlist
+            url: spotify:user:faberyayo:playlist:4I0NnAhaMaPcynq0xbLdyL
+
+  - title: 3d printer
+    icon: mdi:printer-3d
+    cards:
+      - type: entities
+        entities:
+          - sensor.octoprint_actual_bed_temp
+          - sensor.octoprint_actual_tool0_temp
+          - sensor.octoprint_current_state
+          - sensor.octoprint_job_percentage
+          - sensor.octoprint_target_bed_temp
+          - sensor.octoprint_target_tool0_temp
+          - sensor.octoprint_time_elapsed_format
+          - sensor.octoprint_time_remaining_format
+      - type: picture-entity
+        entity: camera.ffmpeg
+        show_state: false
+        show_name: false
+  - title: Livingroom
+    cards:
+      - type: entities
+        title: Livingroom_group
+        show_header_toggle: true
+        entities:
+          - light.fireplace
+          - light.tradfri_bulb_gu10_w_400lm_10
+          - light.tradfri_bulb_gu10_w_400lm_9
+  - title: Upstairs
+    cards:
+      - type: entities
+        title: Bathroom lights
+        show_header_toggle: true
+        entities:
+          - light.tradfri_bulb_gu10_w_400lm
+          - light.tradfri_bulb_gu10_w_400lm_2
+          - light.tradfri_bulb_gu10_w_400lm_3
+  - title: Kitchen
+    cards:
+      - type: entities
+        entities:
+          - light.tradfri_bulb_gu10_w_400lm_10
+          - light.tradfri_bulb_gu10_w_400lm_9
+  - title: Surveillance
+    icon: mdi:cctv
+    cards:
+      - type: picture-entity
+        entity: camera.voordeur
+        show_state: false
+        show_name: false
+      - type: picture-entity
+        entity: camera.zijdeur
+        show_state: false
+        show_name: false
+      - type: picture-entity
+        entity: camera.tf_voordeur
+      - type: picture-entity
+        entity: camera.tf_zijdeur

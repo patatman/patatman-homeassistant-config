@@ -18,6 +18,7 @@ cloud:
         - light.outdoor_light
         - light.kitchen_ledstrip
         - light.window_light
+        - cover.office_roller
 
 frontend:
 

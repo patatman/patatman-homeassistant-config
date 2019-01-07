@@ -1,9 +1,0 @@
-title: Livingroom
-cards:
-  - type: entities
-    title: Livingroom_group
-    show_header_toggle: true
-    entities:
-      - light.fireplace
-      - light.tradfri_bulb_e27_w_opal_1000lm_2
-      - light.tradfri_bulb_gu10_w_400lm_9
