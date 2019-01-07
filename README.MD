@@ -2,7 +2,7 @@
 
 Basic Home Assistant config, with regular updates
 
-<img align="right" src=".assets/hass.png?raw=true" height="170">
+<img align="right" src="./assets/hass.png?raw=true" height="170">
 
 - over 20 different components
 - Updated love-lace
