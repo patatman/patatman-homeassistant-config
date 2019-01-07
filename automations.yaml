@@ -296,7 +296,7 @@
       entity_id: light.gateway_light_7811dcb27710
     service: light.turn_off
 - id: '1544304881668'
-  alias: Nieuwe automatisering
+  alias: Cover button left
   trigger:
   - event_data:
       entity_id: binary_sensor.wall_switch_left_158d0001e0a3f6
@@ -307,8 +307,8 @@
   action:
   - alias: ''
     data:
-      entity_id: light.officerights
-    service: light.toggle
+      entity_id: cover.livingroom_roller
+    service: cover.close_cover
 - id: '1544305094328'
   alias: office knop
   trigger:
@@ -349,3 +349,29 @@
   - data:
       entity_id: light.kossel_light
     service: light.turn_off
+- id: '1546896384028'
+  alias: Cover button right
+  trigger:
+  - event_data:
+      entity_id: binary_sensor.wall_switch_right_158d0001e0a3f6
+      event_type: single
+    event_type: xiaomi_aqara.click
+    platform: event
+  condition: []
+  action:
+  - data:
+      entity_id: cover.livingroom_roller
+    service: cover.open_cover
+- id: '1546896429811'
+  alias: Cover button both
+  trigger:
+  - event_data:
+      entity_id: binary_sensor.wall_switch_both_158d0001e0a3f6
+      event_type: single
+    event_type: xiaomi_aqara.click
+    platform: event
+  condition: []
+  action:
+  - data:
+      entity_id: cover.livingroom_roller
+    service: cover.stop_cover
