@@ -14,10 +14,18 @@ Basic Home Assistant config, with regular updates
 [![GitHub Last Commit](https://img.shields.io/github/last-commit/patatman/patatman-homeassistant-config.svg)](https://img.shields.io/github/last-commit/patatman/patatman-homeassistant-config.svg)
 [![HA Version](https://img.shields.io/badge/Home%20Assistant-0.84.6-blue.svg)](https://img.shields.io/badge/Home%20Assistant-0.84.6-blue.svg)
 
+## Usage
+First clone the repo: 
+```
+$ git clone https://github.com/patatman/patatman-homeassistant-config.git
+```
+Next, edit the docker-compose file to match our enviroment. More about docker-compose here: [Docker](https://www.home-assistant.io/docs/installation/docker/)
+
+If you'd only like to use a certain compenent, just copy the configuration to your own configuration, and create a Frankensteie config (made up of bits and pieces of everyone's configuration)
 ## Hardware
 To see a full list of Hardware, please see [Components](./components.md)
 ### Server
- #### Hardware
+ ### Hardware
  - Intel core i3-6100
  - 16GB Ram
  - 256GB SSD
@@ -28,5 +36,5 @@ To see a full list of Hardware, please see [Components](./components.md)
    - Docker
    - other (influx, grafana etc)
 
-## Love-lace
+
 
