@@ -12,6 +12,7 @@
     retain: true
 
   - platform: mqtt
+    schema: json
     name: "Falcon light"
     state_topic: "light/falcon"
     command_topic: "light/falcon/set"
@@ -42,6 +43,7 @@
     qos: 0
 
   - platform: mqtt
+    schema: json
     name: "Kossel light"
     state_topic: "light/kossel"
     command_topic: "light/kossel/set"

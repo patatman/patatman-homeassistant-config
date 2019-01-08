@@ -1,0 +1,13 @@
+  version: '3'
+  services:
+    homeassistant:
+      container_name: home-assistant
+      image: homeassistant/home-assistant:latest
+      environment:
+        - TZ=Europe/Amsterdam
+      volumes:
+        - /opt/hass/patatman-homeassistant-config:/config
+      devices:
+        - /dev/ttyUSB0:/dev/ttyUSB0
+      restart: always
+      network_mode: host
