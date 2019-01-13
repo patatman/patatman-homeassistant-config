@@ -357,3 +357,34 @@
   - data:
       entity_id: cover.livingroom_roller
     service: cover.stop_cover
+- id: '1547412893560'
+  alias: Bathroom right-button
+  trigger:
+  - event_data:
+      entity_id: binary_sensor.wall_switch_right_158d0001e06eb2
+      event_type: single
+    event_type: xiaomi_aqara.click
+    platform: event
+  condition: []
+  action:
+  - data:
+      brightness: '30'
+      entity_id: light.bathroom2
+    service: light.turn_on
+  - data:
+      brightness: '30'
+      entity_id: light.bathroom3
+    service: light.turn_on
+- id: '1547413011732'
+  alias: Bathroom button both
+  trigger:
+  - event_data:
+      entity_id: binary_sensor.wall_switch_both_158d0001e06eb2
+      event_type: single
+    event_type: xiaomi_aqara.click
+    platform: event
+  condition: []
+  action:
+  - data:
+      entity_id: group.bathroom_group
+    service: light.turn_off
