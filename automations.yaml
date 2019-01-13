@@ -64,15 +64,6 @@
     state: above_horizon
   action:
   - data:
-      gw_mac: 78:11:DC:B2:77:10
-      ringtone_id: '10'
-    service: xiaomi_aqara.play_ringtone
-  - data:
-      entity_id: media_player.living_room_speaker
-      media_content_id: http://www.orangefreesounds.com/wp-content/uploads/2017/07/Ding-dong-chime.mp3
-      media_content_type: MUSIC
-    service: media_player.play_media
-  - data:
       message: Er staat iemand voor de deur
       title: Deurbel
     service: notify.ios_iphone_pim
@@ -269,8 +260,6 @@
     platform: state
     to: 'on'
   condition:
-  - after: sunset
-    condition: sun
   - after: '23:00'
     before: 04:00
     condition: time
@@ -289,7 +278,6 @@
     to: 'off'
   condition:
   - after: sunset
-    before: sunrise
     condition: sun
   action:
   - data:
@@ -310,21 +298,15 @@
       entity_id: cover.livingroom_roller
     service: cover.close_cover
 - id: '1544305094328'
-  alias: office knop
+  alias: Rolluiken omhoog
   trigger:
-  - event_data:
-      entity_id: binary_sensor.wall_switch_left_158d0001e0a3f6
-      event_type: single
-    event_type: xiaomi_aqara.click
-    platform: event
+  - at: 07:00
+    platform: time
   condition: []
   action:
   - data:
-      entity_id: group.office_lights
-    service: light.toggle
-  - data:
-      entity_id: light.falcon_light
-    service: light.toggle
+      entity_id: group.all_covers
+    service: cover.open_cover
 - id: '1546196514195'
   alias: Octoprint-led
   trigger:
