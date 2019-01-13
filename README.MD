@@ -29,6 +29,9 @@ This is needed since we're mounting the whole directory as our config.
 If you'd only like to use a certain compenent, just copy the configuration to your own configuration, and create a Frankensteie config (made up of bits and pieces of everyone's configuration)
 
 ## Docker-compose Usage
+
+<img align="right" src="./.assets/hass-docker-compose.gif?raw=true">
+
 I like to use Docker-compose opposed to a long docker run command. Since it gives me more flexibility in restarting home-assistant. It's also easier to maintain, since it's a single file. 
 Some of the basics commands you might already use with docker:
 ### Start the container in the foreground
@@ -57,7 +60,7 @@ $ docker-compose logs -f
 This will open the logs, and automatically follow them(showing new entries). 
 You can also send it without `-f`, this will not follow the logs. 
 
-<img align="right" src="./.assets/hass-docker-compose.gif?raw=true">
+
 
 
 ## Hardware
