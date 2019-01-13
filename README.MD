@@ -52,6 +52,16 @@ $ docker-compose run -d
 ```  
 With the `-d` parameter you send the TTY to the background. This is the recommended way of running Home Assistant, since you can use your terminal.
 
+### Restart containers
+```
+$ docker-compose restart
+```
+
+### Show running containers
+```
+$ docker-compose ps
+```
+
 ### View logs
 
 ```
