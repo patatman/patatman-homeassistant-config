@@ -28,7 +28,34 @@ This is needed since we're mounting the whole directory as our config.
 
 If you'd only like to use a certain compenent, just copy the configuration to your own configuration, and create a Frankensteie config (made up of bits and pieces of everyone's configuration)
 
-## Usage
+## Docker-compose Usage
+I like to use Docker-compose opposed to a long docker run command. Since it gives me more flexibility in restarting home-assistant. It's also easier to maintain, since it's a single file. 
+Some of the basics commands you might already use with docker:
+### Start the container in the foreground
+
+```
+$ docker-compose run
+```   
+This runs the container in the foreground, showing all TTY straight into your terminal. Handy for debugging.
+To exit, hit `ctrl + c` 
+<aside class="notice">
+Exiting a container running in the foreground will kill it. Meaning Home Assistant will no longer be active.
+</aside>
+
+### Start the container in the background
+
+```
+$ docker-compose run -d
+```  
+With the `-d` parameter you send the TTY to the background. This is the recommended way of running Home Assistant, since you can use your terminal.
+
+### View logs
+
+```
+$ docker-compose logs -f
+```
+This will open the logs, and automatically follow them(showing new entries). 
+You can also send it without `-f`, this will not follow the logs. 
 
 <img align="right" src="./.assets/hass-docker-compose.gif?raw=true">
 
