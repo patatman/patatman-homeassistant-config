@@ -10,18 +10,6 @@
       topic: light/falcon/set
       payload: '{"transition":{{ trigger.to_state.state | int }}}'
   id: ea5948cf7c4e44c0a5399d18f84421cf
-- alias: Kossel Animation Speed
-  initial_state: true
-  hide_entity: false
-  trigger:
-  - platform: state
-    entity_id: input_slider.kossel_animation_speed
-  action:
-  - service: mqtt.publish
-    data_template:
-      topic: light/kossel/set
-      payload: '{"transition":{{ trigger.to_state.state | int }}}'
-  id: e8719aeb9749442eb5283530dfdef9f6
 - id: '1519381563349'
   alias: Doorbell(Nighttime)
   trigger:
@@ -317,7 +305,7 @@
   condition: []
   action:
   - data:
-      entity_id: light.kossel_light
+      entity_id: light.kossel_light_2
     service: light.turn_on
 - id: '1546196538451'
   alias: octo-print-off
@@ -329,7 +317,7 @@
   condition: []
   action:
   - data:
-      entity_id: light.kossel_light
+      entity_id: light.kossel_light_2
     service: light.turn_off
 - id: '1546896384028'
   alias: Cover button right

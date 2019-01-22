@@ -43,37 +43,6 @@
     qos: 0
 
   - platform: mqtt
-    schema: json
-    name: "Kossel light"
-    state_topic: "light/kossel"
-    command_topic: "light/kossel/set"
-    effect: true
-    effect_list:
-      - bpm
-      - candy cane
-      - confetti
-      - cyclon rainbow
-      - dots
-      - fire
-      - glitter
-      - juggle
-      - lightning
-      - noise
-      - police all
-      - police one
-      - rainbow
-      - rainbow with glitter
-      - ripple
-      - sinelon
-      - solid
-      - twinkle
-    brightness: true
-    flash: true
-    rgb: true
-    optimistic: false
-    qos: 0
-
-  - platform: mqtt
     name: "Fireplace" 
     state_topic: "stat/sonoff2/POWER"
     command_topic: "cmnd/sonoff2/POWER"
