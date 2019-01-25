@@ -272,7 +272,7 @@
       entity_id: light.gateway_light_7811dcb27710
     service: light.turn_off
 - id: '1544304881668'
-  alias: Cover button left
+  alias: Cover button left(downstairs)
   trigger:
   - event_data:
       entity_id: binary_sensor.wall_switch_left_158d0001e0a3f6
@@ -320,7 +320,7 @@
       entity_id: light.kossel_light_2
     service: light.turn_off
 - id: '1546896384028'
-  alias: Cover button right
+  alias: Cover button right(downstairs)
   trigger:
   - event_data:
       entity_id: binary_sensor.wall_switch_right_158d0001e0a3f6
@@ -333,7 +333,7 @@
       entity_id: cover.livingroom_roller
     service: cover.open_cover
 - id: '1546896429811'
-  alias: Cover button both
+  alias: Cover button both(downstairs)
   trigger:
   - event_data:
       entity_id: binary_sensor.wall_switch_both_158d0001e0a3f6
@@ -376,3 +376,42 @@
   - data:
       entity_id: group.bathroom_group
     service: light.turn_off
+- id: '1548364073868'
+  alias: Cover office left
+  trigger:
+  - event_data:
+      entity_id: binary_sensor.wall_switch_left_158d000312d1f1
+      event_type: single
+    event_type: xiaomi_aqara.click
+    platform: event
+  condition: []
+  action:
+  - data:
+      entity_id: cover.office_roller
+    service: cover.close_cover
+- id: '1548364189711'
+  alias: Cover office right
+  trigger:
+  - event_data:
+      entity_id: binary_sensor.wall_switch_right_158d000312d1f1
+      event_type: single
+    event_type: xiaomi_aqara.click
+    platform: event
+  condition: []
+  action:
+  - data:
+      entity_id: cover.office_roller
+    service: cover.open_cover
+- id: '1548364252800'
+  alias: Cover office both
+  trigger:
+  - event_data:
+      entity_id: binary_sensor.wall_switch_both_158d000312d1f1
+      event_type: single
+    event_type: xiaomi_aqara.click
+    platform: event
+  condition: []
+  action:
+  - data:
+      entity_id: cover.office_roller
+    service: cover.stop_cover
