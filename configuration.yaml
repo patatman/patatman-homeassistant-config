@@ -110,6 +110,8 @@ light: !include_dir_merge_list lights
 
 sensor: !include_dir_merge_list sensors
 
+chatbot: !include_dir_merge_list chatbot
+
 
 weather:
   - platform: darksky
