@@ -31,6 +31,14 @@ notify:
   - name: "Pushbullet 2"
     platform: pushbullet
     api_key: !secret pushapi2
+  - name: telegram_bot
+    platform: telegram
+    chat_id: !secret telegram_chat_id
+
+telegram_bot:
+  - platform: polling
+    api_key: !secret telegram_key
+    allowed_chat_ids: !secret telegram_id
 
 sun:
 logbook: 
