@@ -81,6 +81,7 @@ octoprint:
     api_key: !secret octo-api
 
 ffmpeg:
+lovelace:
 
 input_number:
   falcon_animation_speed:
@@ -109,8 +110,6 @@ camera: !include_dir_merge_list camera
 light: !include_dir_merge_list lights
 
 sensor: !include_dir_merge_list sensors
-
-chatbot: !include_dir_merge_list chatbot
 
 
 weather:
