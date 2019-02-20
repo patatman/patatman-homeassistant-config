@@ -415,32 +415,4 @@
   - data:
       entity_id: cover.office_roller
     service: cover.stop_cover
-- id: '1550564308364'
-  alias: Telegram bot that reply pong to ping
-  trigger:
-  - event_data:
-      text: ping
-    event_type: telegram_text
-    platform: event
-  - event_data:
-      text: Ping
-    event_type: telegram_text
-    platform: event
-  condition: []
-  action:
-  - data:
-      message: pong
-    service: telegram_bot.send_message
-- id: '1550565595309'
-  alias: Telegram bot light status
-  trigger:
-  - event_data:
-      text: status
-    event_type: telegram_text
-    platform: event
-  - event_data:
-      text: Status
-    event_type: telegram_text
-    platform: event
-  condition: []
-  action: []
+
