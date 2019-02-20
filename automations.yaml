@@ -82,7 +82,7 @@
     event_type: click
     platform: event
 - id: '1519760782392'
-  alias: Hallway motion
+  alias: Motion hallway (on)
   trigger:
   - entity_id: binary_sensor.motion_sensor_158d0001a92381
     from: 'off'
@@ -96,39 +96,36 @@
   - data:
       entity_id: group.hallway
     service: light.turn_on
-- action:
-  - data:
-      entity_id: group.hallway
-    service: light.turn_off
-  alias: Hallway no motion
-  condition:
-  - condition: state
-    entity_id: sun.sun
-    state: below_horizon
-  id: '1519760817306'
+- id: '1519760817306'
+  alias: Motion hallway (off)
   trigger:
   - entity_id: binary_sensor.motion_sensor_158d0001a92381
     from: 'on'
     platform: state
     to: 'off'
-- action:
-  - data:
-      entity_id: group.livingroom
-    service: light.turn_on
-  alias: Hallway Morning
   condition:
   - condition: state
     entity_id: sun.sun
     state: below_horizon
-  - after: '6:00'
-    before: '8:00'
-    condition: time
-  id: '1520200724100'
+  action:
+  - data:
+      entity_id: group.hallway
+    service: light.turn_off
+- id: '1520200724100'
+  alias: Motion hallway morning (on)
   trigger:
   - entity_id: binary_sensor.motion_sensor_158d0001a92381
     from: 'off'
     platform: state
     to: 'on'
+  condition:
+  - after: '6:00'
+    before: '8:30'
+    condition: time
+  action:
+  - data:
+      entity_id: group.livingroom
+    service: light.turn_on
 - action:
   - data:
       entity_id: light.frondoor
@@ -165,38 +162,38 @@
     from: 'on'
     platform: state
     to: 'off'
-- action:
-  - data:
-      entity_id: group.kitchenspots
-    service: light.turn_on
-  alias: Kitchen motion
-  condition:
-  - condition: state
-    entity_id: sun.sun
-    state: below_horizon
-  id: '1528109786675'
+- id: '1528109786675'
+  alias: Motion kitchen (on)
   trigger:
   - entity_id: binary_sensor.motion_sensor_158d0001e55662
     from: 'off'
     platform: state
     to: 'on'
-- action:
-  - data:
-      entity_id: group.kitchenspots
-    service: light.turn_off
-  alias: Kitchen no_motion
   condition:
   - condition: state
     entity_id: sun.sun
     state: below_horizon
-  id: '1528109853713'
+  action:
+  - data:
+      entity_id: group.kitchenspots
+    service: light.turn_on
+- id: '1528109853713'
+  alias: Motion kitchen (off)
   trigger:
   - entity_id: binary_sensor.motion_sensor_158d0001e55662
     from: 'on'
     platform: state
     to: 'off'
+  condition:
+  - condition: state
+    entity_id: sun.sun
+    state: below_horizon
+  action:
+  - data:
+      entity_id: group.kitchenspots
+    service: light.turn_off
 - id: '1528823416468'
-  alias: Upstairs Motion
+  alias: Motion upstairs (on)
   trigger:
   - entity_id: binary_sensor.motion_sensor_158d0001e56350
     from: 'off'
@@ -212,21 +209,21 @@
   - data:
       entity_id: group.upstairs_spots
     service: light.turn_on
-- action:
-  - data:
-      entity_id: group.upstairs_spots
-    service: light.turn_off
-  alias: Upstairs no motion
-  condition:
-  - condition: state
-    entity_id: sun.sun
-    state: below_horizon
-  id: '1528823457733'
+- id: '1528823457733'
+  alias: Motion upstairs (off)
   trigger:
   - entity_id: binary_sensor.motion_sensor_158d0001e56350
     from: 'on'
     platform: state
     to: 'off'
+  condition:
+  - condition: state
+    entity_id: sun.sun
+    state: below_horizon
+  action:
+  - data:
+      entity_id: group.upstairs_spots
+    service: light.turn_off
 - action:
   - data:
       entity_id: group.bathroom_group
@@ -444,4 +441,71 @@
     platform: event
   condition: []
   action: []
-~
+- id: '1550695640677'
+  alias: Telegram cleaning
+  trigger:
+  - entity_id: vacuum.miep
+    from: docked
+    platform: state
+    to: cleaning
+  condition: []
+  action:
+  - data:
+      message: Cleaning, beep boop
+    service: telegram_bot.send_message
+- id: '1550695784339'
+  alias: Telegram docking
+  trigger:
+  - entity_id: vacuum.miep
+    from: cleaning
+    platform: state
+    to: Returning to dock
+  condition: []
+  action:
+  - data:
+      message: Getting juiced up!
+    service: telegram_bot.send_message
+- id: '1550697141393'
+  alias: Motion office(on)
+  trigger:
+  - entity_id: binary_sensor.motion_sensor_158d0001e52649
+    from: 'off'
+    platform: state
+    to: 'on'
+  condition:
+  - condition: state
+    entity_id: sun.sun
+    state: below_horizon
+  action:
+  - data:
+      brightness: '120'
+      entity_id: group.office_lights
+    service: light.turn_on
+- id: '1550697179004'
+  alias: Motion office (off)
+  trigger:
+  - entity_id: binary_sensor.motion_sensor_158d0001e52649
+    from: 'on'
+    platform: state
+    to: 'off'
+  condition: []
+  action:
+  - data:
+      entity_id: group.office_lights
+    service: light.turn_off
+- id: '1550697682701'
+  alias: Motion office (on, cover)
+  trigger:
+  - entity_id: binary_sensor.motion_sensor_158d0001e52649
+    from: 'off'
+    platform: state
+    to: 'on'
+  condition:
+  - condition: state
+    entity_id: cover.office_roller
+    state: closed
+  action:
+  - data:
+      brightness: '120'
+      entity_id: group.office_lights
+    service: light.turn_on

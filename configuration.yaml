@@ -20,6 +20,8 @@ cloud:
         - light.window_light
         - cover.office_roller
 
+system_health:
+
 frontend:
 
 discovery:
@@ -122,6 +124,6 @@ weather:
 #    homeassistant.components.http.view: debug
 
 group: !include groups.yaml
-automation: !include_dir_merge_list automations
+automation: !include automations.yaml
 
 script: !include scripts.yaml
