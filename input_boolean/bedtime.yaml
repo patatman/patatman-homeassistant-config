@@ -1,0 +1,4 @@
+ - bedtime:
+     name: Is someone in bed?
+     initial: off
+     icon: mdi:bed

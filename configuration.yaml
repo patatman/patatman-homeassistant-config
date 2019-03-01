@@ -19,6 +19,14 @@ cloud:
         - light.kitchen_ledstrip
         - light.window_light
         - cover.office_roller
+        - input_boolean.bedtime
+
+
+history: 
+  exclude:
+    domains:
+      - automation
+      - weblink
 
 system_health:
 
@@ -113,6 +121,11 @@ light: !include_dir_merge_list lights
 
 sensor: !include_dir_merge_list sensors
 
+input_boolean: 
+  bedtime:
+    name: it's bedtime
+    initial: off 
+    icon: mdi:bed  
 
 weather:
   - platform: darksky

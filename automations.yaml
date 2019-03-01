@@ -114,7 +114,7 @@
 - id: '1520200724100'
   alias: Motion hallway morning (on)
   trigger:
-  - entity_id: binary_sensor.motion_sensor_158d0001a92381
+  - entity_id: binary_sensor.motion_sensor_158d0001e56350
     from: 'off'
     platform: state
     to: 'on'
@@ -203,8 +203,9 @@
   - condition: state
     entity_id: sun.sun
     state: below_horizon
-  - before: '23:00'
-    condition: time
+  - condition: state
+    entity_id: input_boolean.bedtime
+    state: 'off'
   action:
   - data:
       entity_id: group.upstairs_spots
@@ -245,9 +246,9 @@
     platform: state
     to: 'on'
   condition:
-  - after: '23:00'
-    before: 04:00
-    condition: time
+  - condition: state
+    entity_id: input_boolean.bedtime
+    state: 'on'
   action:
   - data:
       brightness: '120'
@@ -261,9 +262,7 @@
     from: 'on'
     platform: state
     to: 'off'
-  condition:
-  - after: sunset
-    condition: sun
+  condition: []
   action:
   - data:
       entity_id: light.gateway_light_7811dcb27710
@@ -508,4 +507,24 @@
   - data:
       brightness: '120'
       entity_id: group.office_lights
+    service: light.turn_on
+- id: '1550872980640'
+  alias: Reset bedtime
+  trigger:
+  - at: 05:00
+    platform: time
+  condition: []
+  action:
+  - data:
+      entity_id: input_boolean.bedtime
+    service: input_boolean.turn_off
+- id: '1551382880509'
+  alias: New Automation
+  trigger:
+  - entity_id: automation.badkamer_linkerknop
+    platform: state
+  condition: []
+  action:
+  - data:
+      entity_id: light.kitchen_ledstrip
     service: light.turn_on
