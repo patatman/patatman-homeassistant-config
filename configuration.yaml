@@ -14,12 +14,15 @@ cloud:
     filter:
       include_entities:
         - light.hallway_3
-        - light.christmas_tree
         - light.outdoor_light
         - light.kitchen_ledstrip
         - light.window_light
         - cover.office_roller
+        - cover.livingroom_roller
+        - light.rode_lamp
+        - light.tradfri_bulb_e27_w_opal_1000lm_2
         - input_boolean.bedtime
+        - switch.sonoff_basic_relay_2
 
 
 history: 
@@ -61,11 +64,10 @@ nest:
   client_id: !secret nest_id
   client_secret: !secret nest_secret
 
-climate:
-  - platform: honeywell
-    username: !secret honeywell_user
-    password: !secret honeywell_pass
-    scan_interval: 600
+evohome:
+  username: !secret honeywell_user
+  password: !secret honeywell_pass
+  scan_interval: 600
 
 rflink:
   port: /dev/ttyUSB0

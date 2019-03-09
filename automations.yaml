@@ -92,6 +92,9 @@
   - condition: state
     entity_id: sun.sun
     state: below_horizon
+  - condition: state
+    entity_id: input_boolean.bedtime
+    state: 'off'
   action:
   - data:
       entity_id: group.hallway
@@ -173,6 +176,9 @@
   - condition: state
     entity_id: sun.sun
     state: below_horizon
+  - condition: state
+    entity_id: input_boolean.bedtime
+    state: 'off'
   action:
   - data:
       entity_id: group.kitchenspots
@@ -518,13 +524,3 @@
   - data:
       entity_id: input_boolean.bedtime
     service: input_boolean.turn_off
-- id: '1551382880509'
-  alias: New Automation
-  trigger:
-  - entity_id: automation.badkamer_linkerknop
-    platform: state
-  condition: []
-  action:
-  - data:
-      entity_id: light.kitchen_ledstrip
-    service: light.turn_on
