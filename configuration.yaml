@@ -23,6 +23,7 @@ cloud:
         - light.tradfri_bulb_e27_w_opal_1000lm_2
         - input_boolean.bedtime
         - switch.sonoff_basic_relay_2
+        - switch.tradfri_outlet
 
 
 history: 
@@ -37,7 +38,7 @@ frontend:
   themes:
     clear:
       # Background image
-      background-image: 'center / cover no-repeat url("/local/day.png") fixed'
+      background-image: 'center / cover no-repeat url("/local/day.jpg") fixed'
     
       # Colors
       text-color: '#636B75'                                                           # Grey text
