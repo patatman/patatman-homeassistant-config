@@ -3,3 +3,4 @@
      username: !secret dsm_user
      password: !secret dsm
      verify_ssl: False
+     framerate: 30

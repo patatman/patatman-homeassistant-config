@@ -236,6 +236,10 @@ media_player:
 cover: !include_dir_merge_list covers
 
 camera: !include_dir_merge_list camera
+
+tesla:
+  username: !secret tesla_username
+  password: !secret tesla_password
      
 light: !include_dir_merge_list lights
 
