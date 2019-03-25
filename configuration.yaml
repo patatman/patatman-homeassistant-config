@@ -35,7 +35,6 @@ history:
 system_health:
 
 frontend:
-  themes: !include_dir_merge_list themes
 
 discovery:
 
