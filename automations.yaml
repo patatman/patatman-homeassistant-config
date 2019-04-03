@@ -125,6 +125,9 @@
   - after: '6:00'
     before: '8:30'
     condition: time
+  - condition: state
+    entity_id: sun.sun
+    state: below_horizon
   action:
   - data:
       entity_id: group.livingroom
@@ -524,3 +527,94 @@
   - data:
       entity_id: input_boolean.bedtime
     service: input_boolean.turn_off
+- id: '1553538719582'
+  alias: Switch to dark theme
+  trigger:
+  - entity_id: sun.sun
+    from: above_horizon
+    platform: state
+    to: below_horizon
+  condition: []
+  action:
+  - data:
+      name: dark
+    service: frontend.set_theme
+- id: '1553538754094'
+  alias: Set dark theme
+  trigger:
+  - entity_id: sun.sun
+    from: below_horizon
+    platform: state
+    to: above_horizon
+  condition: []
+  action:
+  - data:
+      name: clear
+    service: frontend.set_theme
+- id: '1553543612290'
+  alias: Tesla home lights
+  trigger:
+  - entity_id: device_tracker.tesla_model_s_5yjsa7e28gf140866_location_tracker
+    from: not_home
+    platform: state
+    to: home
+  condition:
+  - condition: state
+    entity_id: sun.sun
+    state: below_horizon
+  action:
+  - data:
+      entity_id: group.livingroom_group
+    service: light.turn_on
+  - data:
+      entity_id: group.livingroom_group
+    service: switch.turn_on
+- id: '1554283978472'
+  alias: Printing done
+  trigger:
+  - entity_id: binary_sensor.octoprint_printing
+    from: 'on'
+    platform: state
+    to: 'off'
+  condition: []
+  action:
+  - data:
+      entity_id: camera.ffmpeg
+      filename: /config/www/tmpimage/printer.jpg
+    service: camera.snapshot
+  - data:
+      message: Printing done
+    service: telegram_bot.send_message
+  - data:
+      file: /config/www/tmpimage/printer.jpg
+    service: telegram_bot.send_photo
+- id: '1554284164549'
+  alias: Telegram print status
+  trigger:
+  - event_data:
+      text: Print status
+    event_type: telegram_text
+    platform: event
+  - event_data:
+      text: Printer status
+    event_type: telegram_text
+    platform: event
+  condition: []
+  action:
+  - data:
+      entity_id: camera.ffmpeg
+      filename: /config/www/tmpimage/printer_status.jpg
+    service: camera.snapshot
+  - data:
+      message: Job is at {{ states('sensor.octoprint_job_percentage') }}%
+    service: telegram_bot.send_message
+  - data:
+      message: 'expected time remaining is: {{states(''sensor.octoprint_time_remaining_format'')
+        }}'
+    service: telegram_bot.send_message
+  - data:
+      message: 'And here''s a picture of the printbed:'
+    service: telegram_bot.send_message
+  - data:
+      file: /config/www/tmpimage/printer_status.jpg
+    service: telegram_bot.send_photo

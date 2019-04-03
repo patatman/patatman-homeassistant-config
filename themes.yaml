@@ -1,4 +1,8 @@
 slate:
+  # Rounded borders
+  ha-card-border-radius: '20px'
+  # Background image
+  background-image: 'center / cover no-repeat url("/local/night.jpg") fixed'
   # Main colors
   primary-color: '#2980b9'
   accent-color: '#b58e31'
@@ -80,21 +84,30 @@ slate:
   lumo-shade-5pct: 'rgba(34, 34, 34, .05)'
   lumo-tint-5pct: '#222222'
 
+rounded:
+  # Rounded borders
+  ha-card-border-radius: '20px'
+  # Background image
+  background-image: 'center / cover no-repeat url("/local/day.jpg") fixed'
+  background-card-color: 'rgba(255,255,255,0.3)'
+  paper-card-background-color: 'var(--background-card-color)'
 
 clear:
+  # Rounded borders
+  ha-card-border-radius: '20px'
   # Background image
   background-image: 'center / cover no-repeat url("/local/day.jpg") fixed'
   # Colors
   text-color: '#636B75'                                                           # Grey text
   text-medium-color: '#8c96a5'                                                    # Medium grey text
-  text-light-color: '#BAC0C6'                                                     # Light grey text
-  accent-color: '#00a1ff'                                                         # Blue
-  background-color: '#F7F8F9'                                                     # Light grey background
-  background-color-2: '#F4F5F6'                                                   # Light grey background
-  background-card-color: 'rgba(255,255,255,1.0)'                                  # White background
+  text-light-color: '#8d967f'                                                     # Light grey text
+  accent-color: '#b1ce82'                                                         # Blue
+  background-color: 'rgba(247,248,249,1)'                                       # Light grey background
+  background-color-2: 'rgba(244,245,246,1)'                                     # Light grey background
+  background-card-color: 'rgba(255,255,255,0.5)'                                  # White background
   border-color: '#EAEAEA'                                                         # Light grey border
   # Header
-  primary-color: 'var(--text-color)'                                              # Background
+  primary-color: '#627562'                                              # Background
   text-primary-color: '#FFF'                                                      # Text
   
   # Left Menu

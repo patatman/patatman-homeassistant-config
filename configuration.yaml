@@ -24,6 +24,7 @@ cloud:
         - input_boolean.bedtime
         - switch.sonoff_basic_relay_2
         - switch.tradfri_outlet
+        - climate.tesla_model_s_5yjsa7e28gf140866_hvac_climate_system
 
 
 history: 
@@ -32,6 +33,7 @@ history:
       - automation
       - weblink
 
+stream:
 system_health:
 
 frontend:
