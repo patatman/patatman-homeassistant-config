@@ -310,7 +310,7 @@
   condition: []
   action:
   - data:
-      entity_id: light.kossel_light_2
+      entity_id: light.kossel_light
     service: light.turn_on
 - id: '1546196538451'
   alias: octo-print-off
@@ -322,7 +322,7 @@
   condition: []
   action:
   - data:
-      entity_id: light.kossel_light_2
+      entity_id: light.kossel_light
     service: light.turn_off
 - id: '1546896384028'
   alias: Cover button right(downstairs)
@@ -618,3 +618,72 @@
   - data:
       file: /config/www/tmpimage/printer_status.jpg
     service: telegram_bot.send_photo
+- id: '1554312554261'
+  alias: Telegram Alarm
+  trigger:
+  - event_data:
+      text: alarm on
+    event_type: telegram_text
+    platform: event
+  - event_data:
+      text: Alarm on
+    event_type: telegram_text
+    platform: event
+  condition: []
+  action:
+  - data:
+      entity_id: input_boolean.alarm
+    service: input_boolean.turn_on
+  - data:
+      message: Alarm is set
+    service: telegram_bot.send_message
+- id: '1554544852706'
+  alias: Tensorflow voordeur
+  trigger:
+  - event_data: {}
+    event_type: voordeur_motion
+    platform: event
+  condition: []
+  action:
+  - data:
+      entity_id: image_processing.tensorflow_voordeur
+    service: image_processing.scan
+- id: '1554564859672'
+  alias: TensorFlow zijdeur
+  trigger:
+  - event_data: {}
+    event_type: zijdeur_motion
+    platform: event
+  condition: []
+  action:
+  - data:
+      entity_id: image_processing.tensorflow_zijdeur
+    service: image_processing.scan
+- id: '1554790197597'
+  alias: Tensorflow notification voordeur
+  trigger:
+  - above: '0'
+    entity_id: image_processing.tensorflow_voordeur
+    platform: numeric_state
+  condition: []
+  action:
+  - data:
+      message: Something detected at voordeur
+    service: telegram_bot.send_message
+  - data:
+      file: /config/video/voordeur_latest.jpg
+    service: telegram_bot.send_photo
+- id: '1554790271700'
+  alias: Tensorflow notification zijdeur
+  trigger:
+  - above: '0'
+    entity_id: image_processing.tensorflow_zijdeur
+    platform: numeric_state
+  condition: []
+  action:
+  - data:
+      message: something detected on zijdeur camera
+    service: telegram_bot.send_message
+  - data:
+      file: /config/video/zijdeur_latest.jpg
+    service: telegram_bot.send_message

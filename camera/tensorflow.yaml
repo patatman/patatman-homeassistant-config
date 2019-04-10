@@ -1,15 +1,19 @@
 #currently not in use, still need to optimize.
 
-#  - platform: local_file
-#    file_path: /config/video/voordeur_latest.jpg
-#    name: tf_voordeur
-#  - platform: local_file
-#    file_path: /config/video/zijdeur_latest.jpg
-#    name: tf_zijdeur
+  - platform: local_file
+    file_path: /config/video/voordeur_latest.jpg
+    name: tf_voordeur
+  - platform: local_file
+    file_path: /config/video/zijdeur_latest.jpg
+    name: tf_zijdeur
+  - platform: local_file
+    file_path: /config/www/tmpimage/printer.jpg
+    name: tensorflow_test
 
 # Example configuration.yaml entry
 #image_processing:
 #  - platform: tensorflow
+#    scan_interval: 10000
 #    source:
 #      - entity_id: camera.voordeur
 #      - entity_id: camera.zijdeur
