@@ -3,6 +3,8 @@ python:
   - "3.5"
 before_install:
   - mv travis_secrets.yaml secrets.yaml
+  - mkdir tensorflow
+  - touch tensorflow/frozen_inference_graph.pb
 install:
   - pip3 install homeassistant
 script:
