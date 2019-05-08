@@ -8,3 +8,8 @@
     still_image_url: !secret voordeur_stream_still 
     stream_source: !secret voordeur_stream 
     verify_ssl: false
+  - platform: generic
+    name: garage_streaming
+    still_image_url: !secret garage_stream_still
+    stream_source: !secret garage_stream
+    verify_ssl: false

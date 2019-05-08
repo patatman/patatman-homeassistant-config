@@ -9,6 +9,7 @@ homeassistant:
    - type: trusted_networks
      trusted_networks:
        - 192.168.1.10/32
+   - type: homeassistant
   whitelist_external_dirs:
     - /config/video
 
@@ -85,7 +86,8 @@ rflink:
 map:
 
 tts:
-  - platform: google
+  - platform: google_translate
+    service_name: google_say
 
 xiaomi_aqara:
   discovery_retry: 10

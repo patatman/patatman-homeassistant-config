@@ -465,13 +465,13 @@
   alias: Telegram docking
   trigger:
   - entity_id: vacuum.miep
-    from: cleaning
+    from: Cleaning
     platform: state
     to: Returning to dock
   condition: []
   action:
   - data:
-      message: Getting juiced up!
+      message: "Getting juiced up!"
     service: telegram_bot.send_message
 - id: '1550697141393'
   alias: Motion office(on)
@@ -648,6 +648,12 @@
   - data:
       entity_id: image_processing.tensorflow_voordeur
     service: image_processing.scan
+  - data:
+      duration: 5
+      entity_id: camera.voordeur_streaming
+      filename: /config/video/voordeur_video.mp4
+      lookback: 5
+    service: camera.record
 - id: '1554564859672'
   alias: TensorFlow zijdeur
   trigger:
@@ -659,16 +665,24 @@
   - data:
       entity_id: image_processing.tensorflow_zijdeur
     service: image_processing.scan
+  - data:
+      duration: 5
+      entity_id: camera.zijdeur_streaming
+      filename: /config/video/zijdeur_video.mp4
+      lookback: 5
+    service: camera.record
 - id: '1554790197597'
   alias: Tensorflow notification voordeur
   trigger:
   - above: '0'
+    below: '20'
     entity_id: image_processing.tensorflow_voordeur
     platform: numeric_state
   condition: []
   action:
   - data:
-      message: Something detected at voordeur
+      message: '{{ state_attr(''image_processing.tensorflow_voordeur'',''matches'').keys()|list|unique|list|join|title
+        }} detected on voordeur camera'
     service: telegram_bot.send_message
   - data:
       file: /config/video/voordeur_latest.jpg
@@ -682,8 +696,9 @@
   condition: []
   action:
   - data:
-      message: something detected on zijdeur camera
+      message: '{{ state_attr(''image_processing.tensorflow_zijdeur'',''matches'').keys()|list|unique|list|join|title
+        }} detected on zijdeur camera'
     service: telegram_bot.send_message
   - data:
       file: /config/video/zijdeur_latest.jpg
-    service: telegram_bot.send_message
+    service: telegram_bot.send_photo
