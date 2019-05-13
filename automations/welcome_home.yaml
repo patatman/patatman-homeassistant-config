@@ -1,0 +1,17 @@
+{% if now().strftime("%H")|int < 12 %}
+  Good morning,
+{% elif now().strftime("%H")|int < 18 %}
+  Good afternoon,
+{% else %}
+  Good evening,
+{% endif %}
+
+The current livingroom temperature is {{ state_attr ('climate.woonkamer', 'current_temperature' | round) }}
+
+The solar panels produced {{ states ('sensor.energy_today') }} Kwh today.
+
+Miep finished today on {{ state_attr("vacuum.miep", "clean_stop")  }}
+
+{% if is_state ("binary_sensor.door_window_sensor_158d0002133b59", "on") %}
+And a reminder that the bedroom window is open
+{% endif %}

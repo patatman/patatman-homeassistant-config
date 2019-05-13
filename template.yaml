@@ -62,3 +62,12 @@
             {{ minutes }} minutes
           {%- endif -%}
         {%- endif -%}
+
+#      recent_arrival_pim:
+#        friendly_name: "Recent Arrival: Pim"
+#        value_template: >-
+#          {{ states('device_tracker.pim2') }}
+#      recent_arrival_user2:
+#        friendly_name: "Recent Arrival: user2"
+#        value_template: >-
+#          {{ states('sensor.time') and is_state("device_tracker.rachels_iphone", "home") and as_timestamp(now()) - as_timestamp(states.device_tracker.rachels_iphone.last_changed | default(0)) | int <= 60 * (states.input_number.consider_recent_arrival_mins.state | int) }}
