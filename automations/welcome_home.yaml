@@ -15,3 +15,7 @@ Miep finished today on {{ state_attr("vacuum.miep", "clean_stop")  }}
 {% if is_state ("binary_sensor.door_window_sensor_158d0002133b59", "on") %}
 And a reminder that the bedroom window is open
 {% endif %}
+
+Reminder of Washingmachine
+
+Vacuum sensors cleaned
