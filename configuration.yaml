@@ -89,6 +89,9 @@ tts:
   - platform: google_translate
     service_name: google_say
 
+google:
+  client_id: !secret google_cal_id
+  client_secret: !secret google_cal_secret
 xiaomi_aqara:
   discovery_retry: 10
   gateways:
@@ -160,6 +163,13 @@ input_boolean:
     name: alarm
     initial: off
     icon: mdi:alarm
+
+googlehome:
+  devices:
+    - host: 192.168.1.15
+      track_alarms: true
+    - host: 192.168.1.16
+      track_alarms: true
 
 weather:
   - platform: darksky

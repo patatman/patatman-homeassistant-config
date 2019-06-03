@@ -471,7 +471,7 @@
   condition: []
   action:
   - data:
-      message: "Getting juiced up!"
+      message: Getting juiced up!
     service: telegram_bot.send_message
 - id: '1550697141393'
   alias: Motion office(on)
@@ -702,3 +702,108 @@
   - data:
       file: /config/video/zijdeur_latest.jpg
     service: telegram_bot.send_photo
+- id: '1557406766787'
+  alias: Alarm on
+  trigger:
+  - entity_id: binary_sensor.sleutels_pim_3
+    from: Home
+    platform: state
+    to: Away
+  condition: []
+  action:
+  - data:
+      message: 'Alarm is set:'
+    service: telegram_bot.send_message
+- id: '1558271669699'
+  alias: Welcome home Pim
+  trigger:
+  - entity_id: binary_sensor.sleutels_pim_3
+    from: 'off'
+    platform: state
+    to: 'on'
+  condition: []
+  action:
+  - data_template:
+      entity_id: media_player.livingroom
+      message: ' {% if now().strftime("%H")|int < 12 %} Good morning, {% elif now().strftime("%H")|int
+        < 18 %} Good afternoon, {% else %} Good evening, {% endif %}
+
+        The current weather is {{ states ("weather.dark_sky") }}, with a temperature
+        of {{ state_attr ("weather.dark_sky", "temperature" )| int }} degrees.
+
+        The current livingroom temperature is {{ state_attr ("climate.woonkamer",
+        "current_temperature" )|int }} degrees.
+
+        The solar panels produced {{ states ("sensor.energy_today").split(".").0 }}
+        Kilowatthours today.
+
+        {% if is_state ("binary_sensor.door_window_sensor_158d0002133b59", "on") %}
+        Reminder, The bedroom window is open. {% endif %}
+
+        {% if state_attr ("vacuum.miep", "clean_stop").strftime("%d") == now().strftime("%d")
+        %} Vacuum finished today at {{ state_attr ("vacuum.miep", "clean_stop").strftime("%H:%M")}}.
+        {% else %} Vacuum did not clean, last run was {{state_attr ("vacuum.miep",
+        "clean_stop").strftime("%A, %d %B")}}. {% endif %}
+
+        {% if state_attr ("vacuum.miep", "sensor_dirty_left") < 2 %} The vacuum sensors
+        need to be cleaned in {{state_attr ("vacuum.miep", "sensor_dirty_left")}}
+        hours. {% endif %} {% if state_attr ("vacuum.miep", "filter_left") < 2 %}
+        The vacuum sensors need to be cleaned in {{state_attr ("vacuum.miep", "filter_left")}}
+        hours. {% endif %} {% if state_attr ("vacuum.miep", "side_brush_left") < 2
+        %} The vacuum sensors need to be cleaned in {{state_attr ("vacuum.miep", "side_brush_left")}}
+        hours. {% endif %} {% if state_attr ("vacuum.miep", "main_brush_left") < 2
+        %} The vacuum sensors need to be cleaned in {{state_attr ("vacuum.miep", "main_brush_left")}}
+        hours. {% endif %} '
+    service: tts.google_say
+- id: '1558274783849'
+  alias: IFTT
+  trigger:
+  - event_data:
+      action: call_service
+    event_type: ifttt_webhook_received
+    platform: event
+  condition: []
+  action:
+    service_template: '{{ trigger.event.data.service }}'
+    data_template:
+      entity_id: '{{ trigger.event.data.entity_id }}'
+- id: '1558275473307'
+  alias: Washing Machine
+  trigger:
+  - platform: webhook
+    webhook_id: washing-machine
+  condition: []
+  action:
+  - data:
+      message: Hello webhook
+    service: telegram_bot.send_message
+- id: '1558359147797'
+  alias: Good morning
+  trigger:
+  - entity_id: light.bathroom1
+    from: 'off'
+    platform: state
+    to: 'on'
+  condition:
+  - after: '5:00'
+    before: '12:00'
+    condition: time
+  action:
+  - data:
+      entity_id: media_player.googlehome7582
+      volume_level: '0.2'
+    service: media_player.volume_set
+  - service: tts.google_say
+    data_template:
+      entity_id: media_player.bedroom_speaker
+      message: ' {% if now().strftime("%H")|int < 12 %} Good morning, {% elif now().strftime("%H")|int
+        < 18 %} Good afternoon, {% else %} Good evening, {% endif %}
+
+        The current weather is {{ states ("weather.dark_sky") }} with a temperature
+        of {{ state_attr ("weather.dark_sky", "temperature" )| int }} degrees.
+
+        {% if is_state ("calendar.containers", "on") %} {{ state_attr ("calendar.containers",
+        "message") }}. {% endif %} {% if is_state ("binary_sensor.door_window_sensor_158d0002133b59",
+        "on") %} The bedroom window is still open. {% endif %}
+
+        '
