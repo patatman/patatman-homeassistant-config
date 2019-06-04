@@ -47,12 +47,6 @@ frontend:
 discovery:
 
 notify:
-  - name: "Pushbullet 1"
-    platform: pushbullet
-    api_key: !secret pushapi
-  - name: "Pushbullet 2"
-    platform: pushbullet
-    api_key: !secret pushapi2
   - name: telegram_bot
     platform: telegram
     chat_id: !secret telegram_chat_id
