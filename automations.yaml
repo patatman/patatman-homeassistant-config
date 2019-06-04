@@ -465,9 +465,8 @@
   alias: Telegram docking
   trigger:
   - entity_id: vacuum.miep
-    from: Cleaning
     platform: state
-    to: Returning to dock
+    to: Docked
   condition: []
   action:
   - data:

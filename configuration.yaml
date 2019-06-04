@@ -150,7 +150,7 @@ tesla:
      
 light: !include_dir_merge_list lights
 
-sensor: !include_dir_merge_list sensors
+sensor: !include_dir_list sensors
 
 input_boolean: 
   bedtime:
