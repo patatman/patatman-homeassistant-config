@@ -1,7 +1,4 @@
   - platform: launch_library
-  - platform: essent
-      username: !secret essent_username
-      password: !secret essent_password
 
   - platform: dsmr
     host: 192.168.1.32
