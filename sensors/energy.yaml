@@ -1,3 +1,0 @@
-  - platform: essent
-      username: !secret essent_username
-      password: !secret essent_password
