@@ -151,9 +151,9 @@ tesla:
 light: !include_dir_merge_list lights
 
 sensor: !include_dir_merge_list sensors
-    - platform: essent
-      username: !secret essent_username
-      password: !secret essent_password
+#- platform: essent
+#        username: !secret essent_username
+#        password: !secret essent_password
 
 input_boolean: 
   bedtime:

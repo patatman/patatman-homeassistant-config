@@ -437,7 +437,7 @@
       message: pong
     service: telegram_bot.send_message
 - id: '1550565595309'
-  alias: Telegram bot light status
+  alias: Telegram bot status
   trigger:
   - event_data:
       text: status
@@ -448,7 +448,9 @@
     event_type: telegram_text
     platform: event
   condition: []
-  action: []
+  action:
+  - data: {}
+    service: telegram_bot.send_message
 - id: '1550695640677'
   alias: Telegram cleaning
   trigger:
