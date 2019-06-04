@@ -1,7 +1,3 @@
-  - platform: seventeentrack
-    username: !secret seventeentrack_un
-    password: !secret seventeentrack_pw
-
   - platform: launch_library
 
   - platform: dsmr

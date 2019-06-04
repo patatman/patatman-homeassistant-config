@@ -24,8 +24,6 @@ cloud:
         - light.outdoor_light
         - light.kitchen_ledstrip
         - light.window_light
-        - cover.office_roller
-        - cover.livingroom_roller
         - light.rode_lamp
         - light.tradfri_bulb_e27_w_opal_1000lm_2
         - input_boolean.bedtime
@@ -144,7 +142,7 @@ image_processing:
       - "/config/video/{{ camera_entity.split('.')[1] }}_latest.jpg"
 #      - "/config/video/{{ camera_entity.split('.')[1] }}_{{ now().strftime('%Y%m%d_%H%M%S') }}.jpg"
     model:
-      graph: /config/tensorflow/frozen_inference_graph.pb
+      graph: "/config/tensorflow/frozen_inference_graph.pb"
 
 tesla:
   username: !secret tesla_username
