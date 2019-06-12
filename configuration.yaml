@@ -121,6 +121,10 @@ media_player:
   - platform: spotify
     client_id: !secret spotify_client 
     client_secret: !secret spotify
+  - platform: androidtv
+    name: Livingroom
+    host: 192.168.1.103
+    adbkey: /config/adbkey
 
 cover: !include_dir_merge_list covers
 
@@ -145,9 +149,6 @@ tesla:
 light: !include_dir_merge_list lights
 
 sensor: !include_dir_merge_list sensors
-#- platform: essent
-#        username: !secret essent_username
-#        password: !secret essent_password
 
 input_boolean: 
   bedtime:

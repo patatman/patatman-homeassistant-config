@@ -389,7 +389,10 @@
       event_type: single
     event_type: xiaomi_aqara.click
     platform: event
-  condition: []
+  condition:
+  - condition: state
+    entity_id: binary_sensor.door_window_sensor_158d0001e5be31
+    state: 'off'
   action:
   - data:
       entity_id: cover.office_roller
@@ -449,8 +452,10 @@
     platform: event
   condition: []
   action:
-  - data: 
-      message: '
+  - data:
+      message: ' {% if now().strftime("%H")|int < 12 %} Good morning, {% elif now().strftime("%H")|int
+        < 18 %} Good afternoon, {% else %} Good evening, {% endif %}
+
         The current weather is {{ states ("weather.dark_sky") }}, with a temperature
         of {{ state_attr ("weather.dark_sky", "temperature" )| int }} degrees.
 
@@ -476,7 +481,7 @@
         %} The vacuum sensors need to be cleaned in {{state_attr ("vacuum.miep", "side_brush_left")}}
         hours. {% endif %} {% if state_attr ("vacuum.miep", "main_brush_left") < 2
         %} The vacuum sensors need to be cleaned in {{state_attr ("vacuum.miep", "main_brush_left")}}
-        hours. {% endif %} ' 
+        hours. {% endif %} '
     service: telegram_bot.send_message
 - id: '1550695640677'
   alias: Telegram cleaning
