@@ -1,3 +1,12 @@
+- alias: Write Stepper Value to ESP
+  trigger:
+    platform: state
+    entity_id: input_number.stepper_control
+  action:
+  - service: esphome.curtain_bedroom
+    data_template:
+      target: '{{ trigger.to_state.state | int }}'
+  id: 20429983fd4f462f90561dd4cddf43c3
 - alias: Falcon Animation Speed
   initial_state: true
   hide_entity: false
@@ -707,15 +716,15 @@
 - id: '1554790197597'
   alias: Tensorflow notification voordeur
   trigger:
-  - above: '0'
-    below: '20'
-    entity_id: image_processing.tensorflow_voordeur
-    platform: numeric_state
-  condition: []
+  - entity_id: image_processing.tensorflow_voordeur
+    platform: state
+  condition:
+  - condition: template
+    value_template: '{{ trigger.to_state.state |int > 0 }}'
   action:
   - data:
-      message: '{{ state_attr(''image_processing.tensorflow_voordeur'',''matches'').keys()|list|unique|list|join|title
-        }} detected on voordeur camera'
+      message: '{{ state_attr(''image_processing.tensorflow_voordeur'',''matches'').keys()|list|unique|list|join('',
+        '')|title }} detected on voordeur camera'
     service: telegram_bot.send_message
   - data:
       file: /config/video/voordeur_latest.jpg
@@ -723,14 +732,15 @@
 - id: '1554790271700'
   alias: Tensorflow notification zijdeur
   trigger:
-  - above: '0'
-    entity_id: image_processing.tensorflow_zijdeur
-    platform: numeric_state
-  condition: []
+  - entity_id: image_processing.tensorflow_zijdeur
+    platform: state
+  condition:
+  - condition: template
+    value_template: '{{ trigger.to_state.state |int > 0 }}'
   action:
   - data:
-      message: '{{ state_attr(''image_processing.tensorflow_zijdeur'',''matches'').keys()|list|unique|list|join|title
-        }} detected on zijdeur camera'
+      message: '{{ state_attr(''image_processing.tensorflow_zijdeur'',''matches'').keys()|list|unique|list|join('',
+        '')|title }} detected on zijdeur camera'
     service: telegram_bot.send_message
   - data:
       file: /config/video/zijdeur_latest.jpg
@@ -840,3 +850,99 @@
         "on") %} The bedroom window is still open. {% endif %}
 
         '
+- id: '1560369534592'
+  alias: Tensorflow schuur
+  trigger:
+  - event_data: {}
+    event_type: schuur_motion
+    platform: event
+  condition: []
+  action:
+  - data:
+      entity_id: image_processing.tensorflow_schuur
+    service: image_processing.scan
+- id: '1560369782192'
+  alias: Tensorflow notification schuur
+  trigger:
+  - entity_id: image_processing.tensorflow_schuur
+    platform: state
+  condition:
+  - condition: template
+    value_template: '{{ trigger.to_state.state |int > 0 }}'
+  - condition: template
+    value_template: '{{ state_attr("image_processing.tensorflow_schuur","summary").values()|list|join|int
+      > 3 }}'
+  action:
+  - data:
+      message: '{{ state_attr(''image_processing.tensorflow_schuur'',''matches'').keys()|list|unique|list|join('',
+        '')|title }} detected on schuur camera'
+    service: telegram_bot.send_message
+  - data:
+      file: /config/video/schuur_latest.jpg
+    service: telegram_bot.send_photo
+- id: '1560587437401'
+  alias: Telegram Wolfje thuis
+  trigger:
+  - entity_id: binary_sensor.pet_wolfje
+    from: 'off'
+    platform: state
+    to: 'on'
+  condition: []
+  action:
+  - data:
+      message: 'Wolfje is thuis! '
+    service: telegram_bot.send_message
+- id: '1560587629167'
+  alias: Telegram wolfje buiten
+  trigger:
+  - entity_id: binary_sensor.pet_wolfje
+    from: 'on'
+    platform: state
+    to: 'off'
+  condition: []
+  action:
+  - data:
+      message: Wolfje is buiten
+    service: telegram_bot.send_message
+- id: '1560587782912'
+  alias: Telegram Wolfje
+  trigger:
+  - event_data:
+      text: Wolfje status
+    event_type: telegram_text
+    platform: event
+  - event_data:
+      text: wolfje status
+    event_type: telegram_text
+    platform: event
+  - event_data:
+      text: Waar is wolfje
+    event_type: telegram_text
+    platform: event
+  - event_data:
+      text: Wolfje
+    event_type: telegram_text
+    platform: event
+  - event_data:
+      text: wolfje
+    event_type: telegram_text
+    platform: event
+  condition: []
+  action:
+  - data:
+      message: '{% if is_state ("binary_sensor.pet_wolfje", "on") %} Wolfje is binnen
+        chillen. {% elif is_state ("binary_sensor.pet_wolfje", "off") %} Wolfje is
+        buiten chillen. {% endif %}'
+    service: telegram_bot.send_message
+- id: '1561053156688'
+  alias: New Automation
+  trigger:
+  - entity_id: binary_sensor.flap_tuin
+    from: 'on'
+    platform: state
+    to: 'off'
+  condition: []
+  action:
+  - data:
+      message: Hello
+    service: telegram_bot.send_message

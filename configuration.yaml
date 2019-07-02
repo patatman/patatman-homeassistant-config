@@ -13,23 +13,14 @@ homeassistant:
   whitelist_external_dirs:
     - /config/video
 
+recorder: 
+  db_url: !secret database
+  purge_keep_days: 50
+
 http:
   base_url: https://hass.uberserver.nl
 
 cloud:
-  google_actions:
-    filter:
-      include_entities:
-        - light.hallway_3
-        - light.outdoor_light
-        - light.kitchen_ledstrip
-        - light.window_light
-        - light.rode_lamp
-        - light.tradfri_bulb_e27_w_opal_1000lm_2
-        - input_boolean.bedtime
-        - switch.sonoff_basic_relay_2
-        - switch.tradfri_outlet
-        - climate.tesla_model_s_5yjsa7e28gf140866_hvac_climate_system
 
 
 history: 
@@ -103,6 +94,13 @@ ffmpeg:
 lovelace:
 
 input_number:
+  stepper_control:
+    name: Stepper Control
+    initial: 0
+    min: -1000
+    max: 1000
+    step: 1
+    mode: slider
   falcon_animation_speed:
     name: Falcon Animation Speed
     initial: 150
@@ -135,12 +133,25 @@ image_processing:
     scan_interval: 10000
     source:
       - entity_id: camera.voordeur
+      - entity_id: camera.schuur
       - entity_id: camera.zijdeur
     file_out:
       - "/config/video/{{ camera_entity.split('.')[1] }}_latest.jpg"
 #      - "/config/video/{{ camera_entity.split('.')[1] }}_{{ now().strftime('%Y%m%d_%H%M%S') }}.jpg"
     model:
       graph: "/config/tensorflow/frozen_inference_graph.pb"
+      categories:
+        - person
+        - cat
+        - car
+        - dog
+
+surepetcare:
+  username: !secret surepet_user
+  password: !secret surepet_pass
+  household_id: !secret surepet_household
+  flaps: [{id: 209692, name: Tuin}]
+  pets: [{id: 52825, name: Wolfje}]
 
 tesla:
   username: !secret tesla_username
