@@ -504,17 +504,6 @@
   - data:
       message: Cleaning, beep boop
     service: telegram_bot.send_message
-- id: '1550695784339'
-  alias: Telegram docking
-  trigger:
-  - entity_id: vacuum.miep
-    platform: state
-    to: Docked
-  condition: []
-  action:
-  - data:
-      message: Getting juiced up!
-    service: telegram_bot.send_message
 - id: '1550697141393'
   alias: Motion office(on)
   trigger:
@@ -748,10 +737,14 @@
 - id: '1557406766787'
   alias: Alarm on
   trigger:
-  - entity_id: binary_sensor.sleutels_pim_3
+  - entity_id: input_boolean.pim_present
     from: Home
     platform: state
     to: Away
+  - entity_id: input_boolean.bedtime
+    from: 'off'
+    platform: state
+    to: 'on'
   condition: []
   action:
   - data:
@@ -934,15 +927,109 @@
         chillen. {% elif is_state ("binary_sensor.pet_wolfje", "off") %} Wolfje is
         buiten chillen. {% endif %}'
     service: telegram_bot.send_message
-- id: '1561053156688'
-  alias: New Automation
+- id: '1563109920161'
+  alias: Pim presence home
   trigger:
-  - entity_id: binary_sensor.flap_tuin
-    from: 'on'
+  - entity_id: device_tracker.192_168_1_17_a4_50_46_72_c6_82
+    from: not_home
     platform: state
-    to: 'off'
+    to: home
+  - entity_id: device_tracker.192_168_1_16_a4_50_46_72_c6_82
+    from: not_home
+    platform: state
+    to: home
+  - entity_id: device_tracker.192_168_1_17_a4_50_46_72_c6_82
+    from: not_home
+    platform: state
+    to: home
+  - entity_id: device_tracker.192_168_1_18_a4_50_46_72_c6_82
+    from: not_home
+    platform: state
+    to: home
+  condition:
+  - condition: state
+    entity_id: input_boolean.pim_present
+    state: 'off'
+  action:
+  - data:
+      entity_id: input_boolean.pim_present
+    service: input_boolean.turn_on
+- id: '1563110095281'
+  alias: Pim Presence away
+  trigger:
+  - entity_id: device_tracker.192_168_1_15_a4_50_46_72_c6_82
+    from: home
+    platform: state
+    to: not_home
+  - entity_id: device_tracker.192_168_1_16_a4_50_46_72_c6_82
+    from: home
+    platform: state
+    to: not_home
+  - entity_id: device_tracker.192_168_1_17_a4_50_46_72_c6_82
+    from: home
+    platform: state
+    to: not_home
+  - entity_id: device_tracker.192_168_1_18_a4_50_46_72_c6_82
+    from: home
+    platform: state
+    to: not_home
+  condition:
+  - condition: state
+    entity_id: input_boolean.pim_present
+    state: 'on'
+  action:
+  - data:
+      entity_id: input_boolean.pim_present
+    service: input_boolean.turn_off
+- id: '1563110835430'
+  alias: Pim location Office
+  trigger:
+  - above: '-60'
+    entity_id: device_tracker.192_168_1_17_a4_50_46_72_c6_82
+    platform: numeric_state
+  condition: []
+  action:
+  - service: input_select.set_options
+- id: '1563737151086'
+  alias: Xiaomi No bedtime
+  trigger:
+  - event_data:
+      click_type: double
+      entity_id: binary_sensor.switch_158d000210ec53
+    event_type: xiaomi_aqara.click
+    platform: event
   condition: []
   action:
   - data:
-      message: Hello
-    service: telegram_bot.send_message
+      entity_id: input_boolean.bedtime
+    service: input_boolean.turn_off
+- id: '1563737219038'
+  alias: Xiaomi Bedtime
+  trigger:
+  - event_data:
+      click_type: single
+      entity_id: binary_sensor.switch_158d000210ec53
+    event_type: xiaomi_aqara.click
+    platform: event
+  condition: []
+  action:
+  - data:
+      entity_id: input_boolean.bedtime
+    service: input_boolean.turn_on
+- id: '1563738157502'
+  alias: Bedtime toggle
+  trigger:
+  - entity_id: input_boolean.bedtime
+    from: 'off'
+    platform: state
+    to: 'on'
+  condition:
+  - after: '21:00'
+    condition: time
+  action:
+  - data:
+      entity_id: group.all_lights
+    service: light.turn_off
+  - data:
+      entity_id: switch.sonoff_basic_relay, switch.tradfri_outlet
+    service: switch.turn_off

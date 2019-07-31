@@ -47,6 +47,8 @@ telegram_bot:
     api_key: !secret telegram_key
     allowed_chat_ids: !secret telegram_id
 
+wake_on_lan:
+
 sun:
 logbook: 
 config:
@@ -72,9 +74,6 @@ tts:
   - platform: google_translate
     service_name: google_say
 
-google:
-  client_id: !secret google_cal_id
-  client_secret: !secret google_cal_secret
 xiaomi_aqara:
   discovery_retry: 10
   gateways:
@@ -93,6 +92,15 @@ octoprint:
 ffmpeg:
 lovelace:
 
+input_select:
+  sean_room_location:
+    name: Pim's Room Location
+    options:
+      - Bathroom
+      - Office
+      - Away
+      - Home
+
 input_number:
   stepper_control:
     name: Stepper Control
@@ -108,6 +116,7 @@ input_number:
     max: 150
     step: 10
 
+
   kossel_animation_speed:
     name: Kossel Animation Speed
     initial: 150
@@ -119,10 +128,10 @@ media_player:
   - platform: spotify
     client_id: !secret spotify_client 
     client_secret: !secret spotify
-  - platform: androidtv
-    name: Livingroom
-    host: 192.168.1.103
-    adbkey: /config/adbkey
+    #  - platform: androidtv
+    #    name: Livingroom
+    #    host: 192.168.1.103
+    #    adbkey: /config/adbkey
 
 cover: !include_dir_merge_list covers
 
@@ -132,7 +141,7 @@ image_processing:
   - platform: tensorflow
     scan_interval: 10000
     source:
-      - entity_id: camera.voordeur
+#      - entity_id: camera.voordeur
       - entity_id: camera.schuur
       - entity_id: camera.zijdeur
     file_out:
@@ -145,6 +154,22 @@ image_processing:
         - cat
         - car
         - dog
+  - platform: tensorflow
+    scan_interval: 10000
+    source:
+      - entity_id: camera.voordeur
+    file_out:
+      - "/config/video/{{ camera_entity.split('.')[1] }}_latest.jpg"
+#      - "/config/video/{{ camera_entity.split('.')[1] }}_{{ now().strftime('%Y%m%d_%H%M%S') }}.jpg"
+    model:
+      graph: "/config/tensorflow/frozen_inference_graph.pb"
+      categories:
+        - person
+        - cat
+        - car
+        - dog
+      area: 
+        top: 0.3
 
 surepetcare:
   username: !secret surepet_user
@@ -161,6 +186,11 @@ light: !include_dir_merge_list lights
 
 sensor: !include_dir_merge_list sensors
 
+switch:
+  - platform: wake_on_lan
+    mac_address: "70:85:c2:6c:44:f3"
+    host: 192.168.1.11
+
 input_boolean: 
   bedtime:
     name: it's bedtime
@@ -170,12 +200,34 @@ input_boolean:
     name: alarm
     initial: off
     icon: mdi:alarm
+  pim_present:
+    name: Pim Presence
+    initial: on
+
+input_select:
+  pim_room_location:
+    name: Pim's Room Location
+    options:
+      - Bathroom
+      - Living Room
+      - Office
+
+device_tracker:
+  - platform: unifi
+    host: 192.168.1.80
+    username: !secret unifi_username
+    password: !secret unifi_password
+    verify_ssl: false
 
 googlehome:
   devices:
     - host: 192.168.1.15
       track_alarms: true
     - host: 192.168.1.16
+      track_alarms: true
+    - host: 192.168.1.17
+      track_alarms: true
+    - host: 192.168.1.18
       track_alarms: true
 
 weather:
