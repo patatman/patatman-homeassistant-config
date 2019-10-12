@@ -118,6 +118,20 @@
       - sensor.power_production_normal
       - sensor.gas_consumption
     
-#  upstairs:
-#    name: upstairs
-#    view: yes
+  outside_doors:
+    name: "outside doors"
+    entities:
+      - binary_sensor.door_window_sensor_158d000394c404
+      - binary_sensor.door_window_sensor_158d0003943047
+      - binary_sensor.door_window_sensor_158d0003eef6c2
+      - binary_sensor.door_window_sensor_158d0003ef08d2
+      - binary_sensor.door_window_sensor_158d0003ef1b45
+      - binary_sensor.door_window_sensor_158d0003eefd8d
+  outside_windows:
+    name: "windows"
+    entities:
+      - binary_sensor.door_window_sensor_158d0003973604
+      - binary_sensor.door_window_sensor_158d0003d4bad5
+      - binary_sensor.door_window_sensor_158d0003eefd7f
+      - binary_sensor.door_window_sensor_158d0003ef1b45
+

@@ -18,7 +18,8 @@ recorder:
   purge_keep_days: 50
 
 http:
-  base_url: https://hass.uberserver.nl
+  cors_allowed_origins:
+    - https://cast.home-assistant.io
 
 cloud:
 
@@ -33,6 +34,7 @@ stream:
 system_health:
 
 frontend:
+  javascript_version: latest
   themes: !include themes.yaml
 
 discovery:
@@ -196,21 +198,9 @@ input_boolean:
     name: it's bedtime
     initial: off 
     icon: mdi:bed  
-  alarm:
-    name: alarm
-    initial: off
-    icon: mdi:alarm
   pim_present:
     name: Pim Presence
     initial: on
-
-input_select:
-  pim_room_location:
-    name: Pim's Room Location
-    options:
-      - Bathroom
-      - Living Room
-      - Office
 
 device_tracker:
   - platform: unifi
@@ -218,26 +208,31 @@ device_tracker:
     username: !secret unifi_username
     password: !secret unifi_password
     verify_ssl: false
+    
+hacs:
+  token: !secret hacstoken
 
-googlehome:
-  devices:
-    - host: 192.168.1.15
-      track_alarms: true
-    - host: 192.168.1.16
-      track_alarms: true
-    - host: 192.168.1.17
-      track_alarms: true
-    - host: 192.168.1.18
-      track_alarms: true
 
 weather:
   - platform: darksky
     api_key: !secret darksky
+alarm_control_panel:
+  - platform: manual
+    name: Home Alarm
+    code: !secret alarm_pin
+    pending_time: 30
+    delay_time: 20
+    trigger_time: 4
+    disarmed:
+      trigger_time: 0
+    armed_home:
+      pending_time: 0
+      delay_time: 0
 
-logger:
-  default: error
-  logs:
-    homeassistant.components.image_processing: debug
+#logger:
+#  default: error
+#  logs:
+#    homeassistant.components.image_processing: debug
 
 group: !include groups.yaml
 automation: !include automations.yaml

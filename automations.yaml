@@ -64,32 +64,6 @@
       message: Er staat iemand voor de deur
       title: Deurbel
     service: notify.ios_iphone_pim
-- id: '1519398438205'
-  alias: Old speaker lower volume
-  trigger:
-  - event_data:
-      click_type: single
-      event_id: binary_sensor.switch_158d000210ec53
-    event_type: click
-    platform: event
-  condition: []
-  action:
-  - data:
-      entity_id: media_player.old_speaker
-    service: media_player.volume_down
-- action:
-  - data:
-      entity_id: media_player.old_speaker
-    service: media_player.volume_up
-  alias: Old speaker Higher volume
-  condition: []
-  id: '1519747883360'
-  trigger:
-  - event_data:
-      click_type: double
-      event_id: binary_sensor.switch_158d000210ec53
-    event_type: click
-    platform: event
 - id: '1519760782392'
   alias: Motion hallway (on)
   trigger:
@@ -115,10 +89,7 @@
     from: 'on'
     platform: state
     to: 'off'
-  condition:
-  - condition: state
-    entity_id: sun.sun
-    state: below_horizon
+  condition: []
   action:
   - data:
       entity_id: group.hallway
@@ -202,10 +173,7 @@
     from: 'on'
     platform: state
     to: 'off'
-  condition:
-  - condition: state
-    entity_id: sun.sun
-    state: below_horizon
+  condition: []
   action:
   - data:
       entity_id: group.kitchenspots
@@ -235,10 +203,7 @@
     from: 'on'
     platform: state
     to: 'off'
-  condition:
-  - condition: state
-    entity_id: sun.sun
-    state: below_horizon
+  condition: []
   action:
   - data:
       entity_id: group.upstairs_spots
@@ -505,7 +470,7 @@
       message: Cleaning, beep boop
     service: telegram_bot.send_message
 - id: '1550697141393'
-  alias: Motion office(on)
+  alias: Motion stairs(on)
   trigger:
   - entity_id: binary_sensor.motion_sensor_158d0001e52649
     from: 'off'
@@ -517,11 +482,10 @@
     state: below_horizon
   action:
   - data:
-      brightness: '120'
-      entity_id: group.office_lights
+      entity_id: light.hallway_3
     service: light.turn_on
 - id: '1550697179004'
-  alias: Motion office (off)
+  alias: Motion stairs (off)
   trigger:
   - entity_id: binary_sensor.motion_sensor_158d0001e52649
     from: 'on'
@@ -530,24 +494,8 @@
   condition: []
   action:
   - data:
-      entity_id: group.office_lights
+      entity_id: light.hallway_3
     service: light.turn_off
-- id: '1550697682701'
-  alias: Motion office (on, cover)
-  trigger:
-  - entity_id: binary_sensor.motion_sensor_158d0001e52649
-    from: 'off'
-    platform: state
-    to: 'on'
-  condition:
-  - condition: state
-    entity_id: cover.office_roller
-    state: closed
-  action:
-  - data:
-      brightness: '120'
-      entity_id: group.office_lights
-    service: light.turn_on
 - id: '1550872980640'
   alias: Reset bedtime
   trigger:
@@ -610,7 +558,7 @@
   condition: []
   action:
   - data:
-      entity_id: camera.ffmpeg
+      entity_id: camera.octoprint
       filename: /config/www/tmpimage/printer.jpg
     service: camera.snapshot
   - data:
@@ -633,7 +581,7 @@
   condition: []
   action:
   - data:
-      entity_id: camera.ffmpeg
+      entity_id: camera.octoprint
       filename: /config/www/tmpimage/printer_status.jpg
     service: camera.snapshot
   - data:
@@ -735,9 +683,9 @@
       file: /config/video/zijdeur_latest.jpg
     service: telegram_bot.send_photo
 - id: '1557406766787'
-  alias: Alarm on
+  alias: Alarm on_away
   trigger:
-  - entity_id: input_boolean.pim_present
+  - entity_id: device_tracker.mi9_miphone_3
     from: Home
     platform: state
     to: Away
@@ -748,7 +696,7 @@
   condition: []
   action:
   - data:
-      message: 'Alarm is set:'
+      message: Alarm is set - Phone away
     service: telegram_bot.send_message
 - id: '1558271669699'
   alias: Welcome home Pim
@@ -954,33 +902,6 @@
   - data:
       entity_id: input_boolean.pim_present
     service: input_boolean.turn_on
-- id: '1563110095281'
-  alias: Pim Presence away
-  trigger:
-  - entity_id: device_tracker.192_168_1_15_a4_50_46_72_c6_82
-    from: home
-    platform: state
-    to: not_home
-  - entity_id: device_tracker.192_168_1_16_a4_50_46_72_c6_82
-    from: home
-    platform: state
-    to: not_home
-  - entity_id: device_tracker.192_168_1_17_a4_50_46_72_c6_82
-    from: home
-    platform: state
-    to: not_home
-  - entity_id: device_tracker.192_168_1_18_a4_50_46_72_c6_82
-    from: home
-    platform: state
-    to: not_home
-  condition:
-  - condition: state
-    entity_id: input_boolean.pim_present
-    state: 'on'
-  action:
-  - data:
-      entity_id: input_boolean.pim_present
-    service: input_boolean.turn_off
 - id: '1563110835430'
   alias: Pim location Office
   trigger:
@@ -1033,3 +954,144 @@
   - data:
       entity_id: switch.sonoff_basic_relay, switch.tradfri_outlet
     service: switch.turn_off
+
+- id: '1568203353202'
+  alias: Vacuum start
+  trigger:
+  - at: '15:00'
+    platform: time
+  condition: []
+  action:
+  - data:
+      entity_id: vacuum.miep
+    service: vacuum.start
+- id: '1569349947942'
+  alias: Status unicorn - outside door
+  trigger:
+  - entity_id: input_boolean.bedtime
+    from: 'off'
+    platform: state
+    to: 'on'
+  condition:
+  - condition: state
+    entity_id: group.outside_doors
+    state: 'on'
+  action:
+  - data:
+      brightness_pct: '100'
+      color_name: red
+      effect: None
+      entity_id: light.status_unicorn
+    service: light.turn_on
+- id: '1570045586111'
+  alias: Alarm_off_xiaomi
+  trigger:
+  - event_data:
+      click_type: double
+      entity_id: binary_sensor.switch_158d000210ec53
+    event_type: xiaomi_aqara.click
+    platform: event
+  condition: []
+  action:
+  - data:
+      message: Alarm off - Via Xiaomi
+    service: telegram_bot.send_message
+- id: '1570046889964'
+  alias: Alarm_on_xiaomi
+  trigger:
+  - event_data:
+      click_type: single
+      entity_id: binary_sensor.switch_158d000210ec53
+    event_type: xiaomi_aqara.click
+    platform: event
+  condition: []
+  action:
+  - data:
+      message: Alarm on - Xiaomi button
+    service: telegram_bot.send_message
+- id: '1570048484459'
+  alias: Rolluik woonkamer omlaag
+  trigger:
+  - at: '22:00'
+    platform: time
+  condition: []
+  action:
+  - data:
+      entity_id: cover.livingroom_roller
+    service: cover.close_cover
+- id: '1570048669274'
+  alias: Rolluik kantoor - omlaag
+  trigger:
+  - at: '22:00'
+    platform: time
+  condition:
+  - condition: state
+    entity_id: binary_sensor.door_window_sensor_158d0001e5be31
+    state: 'Off'
+  action:
+  - data:
+      entity_id: cover.office_roller
+    service: cover.close_cover
+- id: '1570544659081'
+  alias: Motion-stairs
+  trigger:
+  - entity_id: binary_sensor.motion_sensor_158d0001e52649
+    from: 'off'
+    platform: state
+    to: 'on'
+  condition:
+  - condition: state
+    entity_id: sun.sun
+    state: below_horizon
+  - condition: state
+    entity_id: input_boolean.bedtime
+    state: 'off'
+  action:
+  - data:
+      entity_id: group.livingroom_group
+    service: light.turn_on
+- id: '1570546499913'
+  alias: Alarm_away_trigger-wolfje-away
+  trigger:
+  - entity_id: group.outside_doors
+    from: 'off'
+    platform: state
+    to: 'on'
+  - entity_id: binary_sensor.motion_sensor_158d0001a92381
+    from: 'off'
+    platform: state
+    to: 'on'
+  - entity_id: binary_sensor.motion_sensor_158d0001e55662
+    from: 'off'
+    platform: state
+    to: 'on'
+  condition:
+  - condition: state
+    entity_id: alarm_control_panel.home_alarm
+    state: armed_away
+  - condition: state
+    entity_id: binary_sensor.pet_wolfje
+    state: away
+  action:
+  - data:
+      entity_id: alarm_control_panel.home_alarm
+    service: alarm_control_panel.alarm_trigger
+- id: '1570600594310'
+  alias: Alarm_away_trigger-wolfje-home
+  trigger:
+  - entity_id: group.outside_doors
+    from: 'off'
+    platform: state
+    to: 'on'
+  condition:
+  - condition: state
+    entity_id: alarm_control_panel.home_alarm
+    state: armed_away
+  - condition: state
+    entity_id: binary_sensor.pet_wolfje
+    state: Home
+  action:
+  - data:
+      entity_id: alarm_control_panel.home_alarm
+    service: alarm_control_panel.alarm_trigger
+
