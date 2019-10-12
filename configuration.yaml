@@ -201,13 +201,6 @@ input_boolean:
   pim_present:
     name: Pim Presence
     initial: on
-
-#device_tracker:
-#  - platform: unifi
-#    host: 192.168.1.80
-#    username: !secret unifi_username
-#    password: !secret unifi_password
-#    verify_ssl: false
     
 hacs:
   token: !secret hacstoken
@@ -216,6 +209,7 @@ hacs:
 weather:
   - platform: darksky
     api_key: !secret darksky
+    
 alarm_control_panel:
   - platform: manual
     name: Home Alarm
