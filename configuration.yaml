@@ -94,6 +94,15 @@ octoprint:
 ffmpeg:
 lovelace:
 
+input_select:
+  sean_room_location:
+    name: Pim's Room Location
+    options:
+      - Bathroom
+      - Office
+      - Away
+      - Home
+
 input_number:
   stepper_control:
     name: Stepper Control
@@ -199,8 +208,10 @@ device_tracker:
     username: !secret unifi_username
     password: !secret unifi_password
     verify_ssl: false
+    
 hacs:
   token: !secret hacstoken
+
 
 weather:
   - platform: darksky

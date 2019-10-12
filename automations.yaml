@@ -1,12 +1,12 @@
-- id: 20429983fd4f462f90561dd4cddf43c3
-  alias: Write Stepper Value to ESP
+- alias: Write Stepper Value to ESP
   trigger:
-  - entity_id: input_number.stepper_control
     platform: state
+    entity_id: input_number.stepper_control
   action:
-  - data_template:
+  - service: esphome.curtain_bedroom
+    data_template:
       target: '{{ trigger.to_state.state | int }}'
-    service: esphome.curtain_bedroom_control_stepper
+  id: 20429983fd4f462f90561dd4cddf43c3
 - alias: Falcon Animation Speed
   initial_state: true
   hide_entity: false
@@ -689,6 +689,10 @@
     from: Home
     platform: state
     to: Away
+  - entity_id: input_boolean.bedtime
+    from: 'off'
+    platform: state
+    to: 'on'
   condition: []
   action:
   - data:
@@ -950,6 +954,7 @@
   - data:
       entity_id: switch.sonoff_basic_relay, switch.tradfri_outlet
     service: switch.turn_off
+
 - id: '1568203353202'
   alias: Vacuum start
   trigger:
@@ -1089,3 +1094,4 @@
   - data:
       entity_id: alarm_control_panel.home_alarm
     service: alarm_control_panel.alarm_trigger
+
