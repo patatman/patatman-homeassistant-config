@@ -20,7 +20,6 @@ recorder:
 http:
   cors_allowed_origins:
     - https://cast.home-assistant.io
-  base_url: https://hass.uberserver.nl
 
 cloud:
 
@@ -94,15 +93,6 @@ octoprint:
 
 ffmpeg:
 lovelace:
-
-input_select:
-  sean_room_location:
-    name: Pim's Room Location
-    options:
-      - Bathroom
-      - Office
-      - Away
-      - Home
 
 input_number:
   stepper_control:
