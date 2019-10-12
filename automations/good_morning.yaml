@@ -1,0 +1,16 @@
+ {% if now().strftime("%H")|int < 12 %} 
+ Good morning, 
+ {% elif now().strftime("%H")|int < 18 %} 
+ Good afternoon, 
+ {% else %} 
+ Good evening, 
+ {% endif %}
+
+The current weather is {{ states ("weather.dark_sky") }}, with a temperature of {{ state_attr ("weather.dark_sky", "temperature" )| int }} degrees.
+
+{% if is_state ("calender.containers", "on") %}
+{{ state_attr ("calender.containers", "message") }}.
+{% endif %}
+{% if is_state ("binary_sensor.door_window_sensor_158d0002133b59", "on") %}
+Reminder, The bedroom window is open. 
+{% endif %}
