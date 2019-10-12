@@ -13,23 +13,16 @@ homeassistant:
   whitelist_external_dirs:
     - /config/video
 
+recorder: 
+  db_url: !secret database
+  purge_keep_days: 50
+
 http:
+  cors_allowed_origins:
+    - https://cast.home-assistant.io
   base_url: https://hass.uberserver.nl
 
 cloud:
-  google_actions:
-    filter:
-      include_entities:
-        - light.hallway_3
-        - light.outdoor_light
-        - light.kitchen_ledstrip
-        - light.window_light
-        - light.rode_lamp
-        - light.tradfri_bulb_e27_w_opal_1000lm_2
-        - input_boolean.bedtime
-        - switch.sonoff_basic_relay_2
-        - switch.tradfri_outlet
-        - climate.tesla_model_s_5yjsa7e28gf140866_hvac_climate_system
 
 
 history: 
@@ -42,6 +35,7 @@ stream:
 system_health:
 
 frontend:
+  javascript_version: latest
   themes: !include themes.yaml
 
 discovery:
@@ -55,6 +49,8 @@ telegram_bot:
   - platform: polling
     api_key: !secret telegram_key
     allowed_chat_ids: !secret telegram_id
+
+wake_on_lan:
 
 sun:
 logbook: 
@@ -81,9 +77,6 @@ tts:
   - platform: google_translate
     service_name: google_say
 
-google:
-  client_id: !secret google_cal_id
-  client_secret: !secret google_cal_secret
 xiaomi_aqara:
   discovery_retry: 10
   gateways:
@@ -102,13 +95,30 @@ octoprint:
 ffmpeg:
 lovelace:
 
+input_select:
+  sean_room_location:
+    name: Pim's Room Location
+    options:
+      - Bathroom
+      - Office
+      - Away
+      - Home
+
 input_number:
+  stepper_control:
+    name: Stepper Control
+    initial: 0
+    min: -1000
+    max: 1000
+    step: 1
+    mode: slider
   falcon_animation_speed:
     name: Falcon Animation Speed
     initial: 150
     min: 1
     max: 150
     step: 10
+
 
   kossel_animation_speed:
     name: Kossel Animation Speed
@@ -121,10 +131,10 @@ media_player:
   - platform: spotify
     client_id: !secret spotify_client 
     client_secret: !secret spotify
-  - platform: androidtv
-    name: Livingroom
-    host: 192.168.1.103
-    adbkey: /config/adbkey
+    #  - platform: androidtv
+    #    name: Livingroom
+    #    host: 192.168.1.103
+    #    adbkey: /config/adbkey
 
 cover: !include_dir_merge_list covers
 
@@ -134,13 +144,42 @@ image_processing:
   - platform: tensorflow
     scan_interval: 10000
     source:
-      - entity_id: camera.voordeur
+#      - entity_id: camera.voordeur
+      - entity_id: camera.schuur
       - entity_id: camera.zijdeur
     file_out:
       - "/config/video/{{ camera_entity.split('.')[1] }}_latest.jpg"
 #      - "/config/video/{{ camera_entity.split('.')[1] }}_{{ now().strftime('%Y%m%d_%H%M%S') }}.jpg"
     model:
       graph: "/config/tensorflow/frozen_inference_graph.pb"
+      categories:
+        - person
+        - cat
+        - car
+        - dog
+  - platform: tensorflow
+    scan_interval: 10000
+    source:
+      - entity_id: camera.voordeur
+    file_out:
+      - "/config/video/{{ camera_entity.split('.')[1] }}_latest.jpg"
+#      - "/config/video/{{ camera_entity.split('.')[1] }}_{{ now().strftime('%Y%m%d_%H%M%S') }}.jpg"
+    model:
+      graph: "/config/tensorflow/frozen_inference_graph.pb"
+      categories:
+        - person
+        - cat
+        - car
+        - dog
+      area: 
+        top: 0.3
+
+surepetcare:
+  username: !secret surepet_user
+  password: !secret surepet_pass
+  household_id: !secret surepet_household
+  flaps: [{id: 209692, name: Tuin}]
+  pets: [{id: 52825, name: Wolfje}]
 
 tesla:
   username: !secret tesla_username
@@ -150,31 +189,49 @@ light: !include_dir_merge_list lights
 
 sensor: !include_dir_merge_list sensors
 
+switch:
+  - platform: wake_on_lan
+    mac_address: "70:85:c2:6c:44:f3"
+    host: 192.168.1.11
+
 input_boolean: 
   bedtime:
     name: it's bedtime
     initial: off 
     icon: mdi:bed  
-  alarm:
-    name: alarm
-    initial: off
-    icon: mdi:alarm
+  pim_present:
+    name: Pim Presence
+    initial: on
 
-googlehome:
-  devices:
-    - host: 192.168.1.15
-      track_alarms: true
-    - host: 192.168.1.16
-      track_alarms: true
+device_tracker:
+  - platform: unifi
+    host: 192.168.1.80
+    username: !secret unifi_username
+    password: !secret unifi_password
+    verify_ssl: false
+hacs:
+  token: !secret hacstoken
 
 weather:
   - platform: darksky
     api_key: !secret darksky
+alarm_control_panel:
+  - platform: manual
+    name: Home Alarm
+    code: !secret alarm_pin
+    pending_time: 30
+    delay_time: 20
+    trigger_time: 4
+    disarmed:
+      trigger_time: 0
+    armed_home:
+      pending_time: 0
+      delay_time: 0
 
-logger:
-  default: error
-  logs:
-    homeassistant.components.image_processing: debug
+#logger:
+#  default: error
+#  logs:
+#    homeassistant.components.image_processing: debug
 
 group: !include groups.yaml
 automation: !include automations.yaml

@@ -27,6 +27,7 @@ video
 tts
 
 # Files
+custom_components
 adbkey
 google_calendars.yaml
 secrets.yaml
