@@ -202,12 +202,12 @@ input_boolean:
     name: Pim Presence
     initial: on
 
-device_tracker:
-  - platform: unifi
-    host: 192.168.1.80
-    username: !secret unifi_username
-    password: !secret unifi_password
-    verify_ssl: false
+#device_tracker:
+#  - platform: unifi
+#    host: 192.168.1.80
+#    username: !secret unifi_username
+#    password: !secret unifi_password
+#    verify_ssl: false
     
 hacs:
   token: !secret hacstoken
