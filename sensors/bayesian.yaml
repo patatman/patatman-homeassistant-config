@@ -1,20 +1,20 @@
- - platform: bayesian
-   prior: 0.6
-   name: Pim Presence
-   probability_threshold: 0.9
-   observations:
-   - entity_id: 'input_boolean.pim_present'
-     prob_given_true: 0.9
-     prob_given_false: 0.3
-     platform: 'state'
-     to_state: 'on'
-   - entity_id: 'device_tracker.mi9_miphone'
-     prob_given_true: 0.9
-     prob_given_false: 0.2
-     platform: 'state'
-     to_state: 'home'
-   - entity_id: 'device_tracker.30_95_e3_13_e9_ba'
-     prob_given_true: 0.8
-     prob_given_false: 0.3
-     platform: 'state'
-     to_state: 'home'
+ #- platform: bayesian
+#   prior: 0.6
+#   name: Pim Presence
+#   probability_threshold: 0.9
+#   observations:
+#   - entity_id: 'input_boolean.pim_present'
+#     prob_given_true: 0.9
+#     prob_given_false: 0.3
+#     platform: 'state'
+#     to_state: 'on'
+#   - entity_id: 'device_tracker.mi9_miphone'
+#     prob_given_true: 0.9
+#     prob_given_false: 0.2
+#     platform: 'state'
+#     to_state: 'home'
+#   - entity_id: 'device_tracker.30_95_e3_13_e9_ba'
+#     prob_given_true: 0.8
+#     prob_given_false: 0.3
+#     platform: 'state'
+#     to_state: 'home'
