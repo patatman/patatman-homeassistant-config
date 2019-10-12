@@ -1,2 +1,4 @@
-   - platform: ffmpeg
-     input: http://192.168.1.75/webcam/?action=stream
+   - platform: mjpeg
+     name: octoprint
+     still_image_url: http://192.168.1.75/webcam/?action=snapshot 
+     mjpeg_url: http://192.168.1.75/webcam/?action=stream

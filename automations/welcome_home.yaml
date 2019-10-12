@@ -6,16 +6,33 @@
   Good evening,
 {% endif %}
 
-The current livingroom temperature is {{ state_attr ('climate.woonkamer', 'current_temperature' | round) }}
+Resident.
 
-The solar panels produced {{ states ('sensor.energy_today') }} Kwh today.
+The current weather is {{ states ("weather.dark_sky") }}, with a temperature of {{ state_attr ("weather.dark_sky" , "temperature" ) | int }} degrees.
 
-Miep finished today on {{ state_attr("vacuum.miep", "clean_stop")  }}
+The current livingroom temperature is {{ state_attr ("climate.woonkamer", "current_temperature" )|int }} degrees.
+
+The solar panels produced {{ states ("sensor.energy_today").split(".").0 }} Kilowatthours today.
 
 {% if is_state ("binary_sensor.door_window_sensor_158d0002133b59", "on") %}
-And a reminder that the bedroom window is open
+Reminder, The bedroom window is open.
 {% endif %}
 
-Reminder of Washingmachine
+{% if state_attr ("vacuum.miep", "clean_stop").strftime("%d") == now().strftime("%d") %}
+Vacuum finished today at {{ state_attr ("vacuum.miep", "clean_stop").strftime("%H:%M")}}.
+{% else %}
+Vacuum did not clean, last run was {{state_attr ("vacuum.miep", "clean_stop").strftime("%A, %d %B")}}.
+{% endif %}
 
-Vacuum sensors cleaned
+{% if state_attr ("vacuum.miep", "sensor_dirty_left") < 2 %}
+The vacuum sensors need to be cleaned in {{state_attr ("vacuum.miep", "sensor_dirty_left")}} hours.
+{% endif %}
+{% if state_attr ("vacuum.miep", "filter_left") < 2 %}
+The vacuum sensors need to be cleaned in {{state_attr ("vacuum.miep", "filter_left")}} hours.
+{% endif %}
+{% if state_attr ("vacuum.miep", "side_brush_left") < 2 %}
+The vacuum sensors need to be cleaned in {{state_attr ("vacuum.miep", "side_brush_left")}} hours.
+{% endif %}
+{% if state_attr ("vacuum.miep", "main_brush_left") < 2 %}
+The vacuum sensors need to be cleaned in {{state_attr ("vacuum.miep", "main_brush_left")}} hours.
+{% endif %}

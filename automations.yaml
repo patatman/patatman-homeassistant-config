@@ -1,3 +1,12 @@
+- alias: Write Stepper Value to ESP
+  trigger:
+    platform: state
+    entity_id: input_number.stepper_control
+  action:
+  - service: esphome.curtain_bedroom
+    data_template:
+      target: '{{ trigger.to_state.state | int }}'
+  id: 20429983fd4f462f90561dd4cddf43c3
 - alias: Falcon Animation Speed
   initial_state: true
   hide_entity: false
@@ -55,32 +64,6 @@
       message: Er staat iemand voor de deur
       title: Deurbel
     service: notify.ios_iphone_pim
-- id: '1519398438205'
-  alias: Old speaker lower volume
-  trigger:
-  - event_data:
-      click_type: single
-      event_id: binary_sensor.switch_158d000210ec53
-    event_type: click
-    platform: event
-  condition: []
-  action:
-  - data:
-      entity_id: media_player.old_speaker
-    service: media_player.volume_down
-- action:
-  - data:
-      entity_id: media_player.old_speaker
-    service: media_player.volume_up
-  alias: Old speaker Higher volume
-  condition: []
-  id: '1519747883360'
-  trigger:
-  - event_data:
-      click_type: double
-      event_id: binary_sensor.switch_158d000210ec53
-    event_type: click
-    platform: event
 - id: '1519760782392'
   alias: Motion hallway (on)
   trigger:
@@ -106,10 +89,7 @@
     from: 'on'
     platform: state
     to: 'off'
-  condition:
-  - condition: state
-    entity_id: sun.sun
-    state: below_horizon
+  condition: []
   action:
   - data:
       entity_id: group.hallway
@@ -193,10 +173,7 @@
     from: 'on'
     platform: state
     to: 'off'
-  condition:
-  - condition: state
-    entity_id: sun.sun
-    state: below_horizon
+  condition: []
   action:
   - data:
       entity_id: group.kitchenspots
@@ -226,10 +203,7 @@
     from: 'on'
     platform: state
     to: 'off'
-  condition:
-  - condition: state
-    entity_id: sun.sun
-    state: below_horizon
+  condition: []
   action:
   - data:
       entity_id: group.upstairs_spots
@@ -495,19 +469,8 @@
   - data:
       message: Cleaning, beep boop
     service: telegram_bot.send_message
-- id: '1550695784339'
-  alias: Telegram docking
-  trigger:
-  - entity_id: vacuum.miep
-    platform: state
-    to: Docked
-  condition: []
-  action:
-  - data:
-      message: Getting juiced up!
-    service: telegram_bot.send_message
 - id: '1550697141393'
-  alias: Motion office(on)
+  alias: Motion stairs(on)
   trigger:
   - entity_id: binary_sensor.motion_sensor_158d0001e52649
     from: 'off'
@@ -519,11 +482,10 @@
     state: below_horizon
   action:
   - data:
-      brightness: '120'
-      entity_id: group.office_lights
+      entity_id: light.hallway_3
     service: light.turn_on
 - id: '1550697179004'
-  alias: Motion office (off)
+  alias: Motion stairs (off)
   trigger:
   - entity_id: binary_sensor.motion_sensor_158d0001e52649
     from: 'on'
@@ -532,24 +494,8 @@
   condition: []
   action:
   - data:
-      entity_id: group.office_lights
+      entity_id: light.hallway_3
     service: light.turn_off
-- id: '1550697682701'
-  alias: Motion office (on, cover)
-  trigger:
-  - entity_id: binary_sensor.motion_sensor_158d0001e52649
-    from: 'off'
-    platform: state
-    to: 'on'
-  condition:
-  - condition: state
-    entity_id: cover.office_roller
-    state: closed
-  action:
-  - data:
-      brightness: '120'
-      entity_id: group.office_lights
-    service: light.turn_on
 - id: '1550872980640'
   alias: Reset bedtime
   trigger:
@@ -612,7 +558,7 @@
   condition: []
   action:
   - data:
-      entity_id: camera.ffmpeg
+      entity_id: camera.octoprint
       filename: /config/www/tmpimage/printer.jpg
     service: camera.snapshot
   - data:
@@ -635,7 +581,7 @@
   condition: []
   action:
   - data:
-      entity_id: camera.ffmpeg
+      entity_id: camera.octoprint
       filename: /config/www/tmpimage/printer_status.jpg
     service: camera.snapshot
   - data:
@@ -707,15 +653,15 @@
 - id: '1554790197597'
   alias: Tensorflow notification voordeur
   trigger:
-  - above: '0'
-    below: '20'
-    entity_id: image_processing.tensorflow_voordeur
-    platform: numeric_state
-  condition: []
+  - entity_id: image_processing.tensorflow_voordeur
+    platform: state
+  condition:
+  - condition: template
+    value_template: '{{ trigger.to_state.state |int > 0 }}'
   action:
   - data:
-      message: '{{ state_attr(''image_processing.tensorflow_voordeur'',''matches'').keys()|list|unique|list|join|title
-        }} detected on voordeur camera'
+      message: '{{ state_attr(''image_processing.tensorflow_voordeur'',''matches'').keys()|list|unique|list|join('',
+        '')|title }} detected on voordeur camera'
     service: telegram_bot.send_message
   - data:
       file: /config/video/voordeur_latest.jpg
@@ -723,29 +669,34 @@
 - id: '1554790271700'
   alias: Tensorflow notification zijdeur
   trigger:
-  - above: '0'
-    entity_id: image_processing.tensorflow_zijdeur
-    platform: numeric_state
-  condition: []
+  - entity_id: image_processing.tensorflow_zijdeur
+    platform: state
+  condition:
+  - condition: template
+    value_template: '{{ trigger.to_state.state |int > 0 }}'
   action:
   - data:
-      message: '{{ state_attr(''image_processing.tensorflow_zijdeur'',''matches'').keys()|list|unique|list|join|title
-        }} detected on zijdeur camera'
+      message: '{{ state_attr(''image_processing.tensorflow_zijdeur'',''matches'').keys()|list|unique|list|join('',
+        '')|title }} detected on zijdeur camera'
     service: telegram_bot.send_message
   - data:
       file: /config/video/zijdeur_latest.jpg
     service: telegram_bot.send_photo
 - id: '1557406766787'
-  alias: Alarm on
+  alias: Alarm on_away
   trigger:
-  - entity_id: binary_sensor.sleutels_pim_3
+  - entity_id: device_tracker.mi9_miphone_3
     from: Home
     platform: state
     to: Away
+  - entity_id: input_boolean.bedtime
+    from: 'off'
+    platform: state
+    to: 'on'
   condition: []
   action:
   - data:
-      message: 'Alarm is set:'
+      message: Alarm is set - Phone away
     service: telegram_bot.send_message
 - id: '1558271669699'
   alias: Welcome home Pim
@@ -840,3 +791,307 @@
         "on") %} The bedroom window is still open. {% endif %}
 
         '
+- id: '1560369534592'
+  alias: Tensorflow schuur
+  trigger:
+  - event_data: {}
+    event_type: schuur_motion
+    platform: event
+  condition: []
+  action:
+  - data:
+      entity_id: image_processing.tensorflow_schuur
+    service: image_processing.scan
+- id: '1560369782192'
+  alias: Tensorflow notification schuur
+  trigger:
+  - entity_id: image_processing.tensorflow_schuur
+    platform: state
+  condition:
+  - condition: template
+    value_template: '{{ trigger.to_state.state |int > 0 }}'
+  - condition: template
+    value_template: '{{ state_attr("image_processing.tensorflow_schuur","summary").values()|list|join|int
+      > 3 }}'
+  action:
+  - data:
+      message: '{{ state_attr(''image_processing.tensorflow_schuur'',''matches'').keys()|list|unique|list|join('',
+        '')|title }} detected on schuur camera'
+    service: telegram_bot.send_message
+  - data:
+      file: /config/video/schuur_latest.jpg
+    service: telegram_bot.send_photo
+- id: '1560587437401'
+  alias: Telegram Wolfje thuis
+  trigger:
+  - entity_id: binary_sensor.pet_wolfje
+    from: 'off'
+    platform: state
+    to: 'on'
+  condition: []
+  action:
+  - data:
+      message: 'Wolfje is thuis! '
+    service: telegram_bot.send_message
+- id: '1560587629167'
+  alias: Telegram wolfje buiten
+  trigger:
+  - entity_id: binary_sensor.pet_wolfje
+    from: 'on'
+    platform: state
+    to: 'off'
+  condition: []
+  action:
+  - data:
+      message: Wolfje is buiten
+    service: telegram_bot.send_message
+- id: '1560587782912'
+  alias: Telegram Wolfje
+  trigger:
+  - event_data:
+      text: Wolfje status
+    event_type: telegram_text
+    platform: event
+  - event_data:
+      text: wolfje status
+    event_type: telegram_text
+    platform: event
+  - event_data:
+      text: Waar is wolfje
+    event_type: telegram_text
+    platform: event
+  - event_data:
+      text: Wolfje
+    event_type: telegram_text
+    platform: event
+  - event_data:
+      text: wolfje
+    event_type: telegram_text
+    platform: event
+  condition: []
+  action:
+  - data:
+      message: '{% if is_state ("binary_sensor.pet_wolfje", "on") %} Wolfje is binnen
+        chillen. {% elif is_state ("binary_sensor.pet_wolfje", "off") %} Wolfje is
+        buiten chillen. {% endif %}'
+    service: telegram_bot.send_message
+- id: '1563109920161'
+  alias: Pim presence home
+  trigger:
+  - entity_id: device_tracker.192_168_1_17_a4_50_46_72_c6_82
+    from: not_home
+    platform: state
+    to: home
+  - entity_id: device_tracker.192_168_1_16_a4_50_46_72_c6_82
+    from: not_home
+    platform: state
+    to: home
+  - entity_id: device_tracker.192_168_1_17_a4_50_46_72_c6_82
+    from: not_home
+    platform: state
+    to: home
+  - entity_id: device_tracker.192_168_1_18_a4_50_46_72_c6_82
+    from: not_home
+    platform: state
+    to: home
+  condition:
+  - condition: state
+    entity_id: input_boolean.pim_present
+    state: 'off'
+  action:
+  - data:
+      entity_id: input_boolean.pim_present
+    service: input_boolean.turn_on
+- id: '1563110835430'
+  alias: Pim location Office
+  trigger:
+  - above: '-60'
+    entity_id: device_tracker.192_168_1_17_a4_50_46_72_c6_82
+    platform: numeric_state
+  condition: []
+  action:
+  - service: input_select.set_options
+- id: '1563737151086'
+  alias: Xiaomi No bedtime
+  trigger:
+  - event_data:
+      click_type: double
+      entity_id: binary_sensor.switch_158d000210ec53
+    event_type: xiaomi_aqara.click
+    platform: event
+  condition: []
+  action:
+  - data:
+      entity_id: input_boolean.bedtime
+    service: input_boolean.turn_off
+- id: '1563737219038'
+  alias: Xiaomi Bedtime
+  trigger:
+  - event_data:
+      click_type: single
+      entity_id: binary_sensor.switch_158d000210ec53
+    event_type: xiaomi_aqara.click
+    platform: event
+  condition: []
+  action:
+  - data:
+      entity_id: input_boolean.bedtime
+    service: input_boolean.turn_on
+- id: '1563738157502'
+  alias: Bedtime toggle
+  trigger:
+  - entity_id: input_boolean.bedtime
+    from: 'off'
+    platform: state
+    to: 'on'
+  condition:
+  - after: '21:00'
+    condition: time
+  action:
+  - data:
+      entity_id: group.all_lights
+    service: light.turn_off
+  - data:
+      entity_id: switch.sonoff_basic_relay, switch.tradfri_outlet
+    service: switch.turn_off
+
+- id: '1568203353202'
+  alias: Vacuum start
+  trigger:
+  - at: '15:00'
+    platform: time
+  condition: []
+  action:
+  - data:
+      entity_id: vacuum.miep
+    service: vacuum.start
+- id: '1569349947942'
+  alias: Status unicorn - outside door
+  trigger:
+  - entity_id: input_boolean.bedtime
+    from: 'off'
+    platform: state
+    to: 'on'
+  condition:
+  - condition: state
+    entity_id: group.outside_doors
+    state: 'on'
+  action:
+  - data:
+      brightness_pct: '100'
+      color_name: red
+      effect: None
+      entity_id: light.status_unicorn
+    service: light.turn_on
+- id: '1570045586111'
+  alias: Alarm_off_xiaomi
+  trigger:
+  - event_data:
+      click_type: double
+      entity_id: binary_sensor.switch_158d000210ec53
+    event_type: xiaomi_aqara.click
+    platform: event
+  condition: []
+  action:
+  - data:
+      message: Alarm off - Via Xiaomi
+    service: telegram_bot.send_message
+- id: '1570046889964'
+  alias: Alarm_on_xiaomi
+  trigger:
+  - event_data:
+      click_type: single
+      entity_id: binary_sensor.switch_158d000210ec53
+    event_type: xiaomi_aqara.click
+    platform: event
+  condition: []
+  action:
+  - data:
+      message: Alarm on - Xiaomi button
+    service: telegram_bot.send_message
+- id: '1570048484459'
+  alias: Rolluik woonkamer omlaag
+  trigger:
+  - at: '22:00'
+    platform: time
+  condition: []
+  action:
+  - data:
+      entity_id: cover.livingroom_roller
+    service: cover.close_cover
+- id: '1570048669274'
+  alias: Rolluik kantoor - omlaag
+  trigger:
+  - at: '22:00'
+    platform: time
+  condition:
+  - condition: state
+    entity_id: binary_sensor.door_window_sensor_158d0001e5be31
+    state: 'Off'
+  action:
+  - data:
+      entity_id: cover.office_roller
+    service: cover.close_cover
+- id: '1570544659081'
+  alias: Motion-stairs
+  trigger:
+  - entity_id: binary_sensor.motion_sensor_158d0001e52649
+    from: 'off'
+    platform: state
+    to: 'on'
+  condition:
+  - condition: state
+    entity_id: sun.sun
+    state: below_horizon
+  - condition: state
+    entity_id: input_boolean.bedtime
+    state: 'off'
+  action:
+  - data:
+      entity_id: group.livingroom_group
+    service: light.turn_on
+- id: '1570546499913'
+  alias: Alarm_away_trigger-wolfje-away
+  trigger:
+  - entity_id: group.outside_doors
+    from: 'off'
+    platform: state
+    to: 'on'
+  - entity_id: binary_sensor.motion_sensor_158d0001a92381
+    from: 'off'
+    platform: state
+    to: 'on'
+  - entity_id: binary_sensor.motion_sensor_158d0001e55662
+    from: 'off'
+    platform: state
+    to: 'on'
+  condition:
+  - condition: state
+    entity_id: alarm_control_panel.home_alarm
+    state: armed_away
+  - condition: state
+    entity_id: binary_sensor.pet_wolfje
+    state: away
+  action:
+  - data:
+      entity_id: alarm_control_panel.home_alarm
+    service: alarm_control_panel.alarm_trigger
+- id: '1570600594310'
+  alias: Alarm_away_trigger-wolfje-home
+  trigger:
+  - entity_id: group.outside_doors
+    from: 'off'
+    platform: state
+    to: 'on'
+  condition:
+  - condition: state
+    entity_id: alarm_control_panel.home_alarm
+    state: armed_away
+  - condition: state
+    entity_id: binary_sensor.pet_wolfje
+    state: Home
+  action:
+  - data:
+      entity_id: alarm_control_panel.home_alarm
+    service: alarm_control_panel.alarm_trigger
+
