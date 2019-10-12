@@ -1,6 +1,7 @@
 homeassistant:
   latitude: !secret lat 
   longitude: !secret long 
+  packages: !include_dir_named packages
   elevation: 430
   unit_system: metric
   time_zone: Europe/Amsterdam
@@ -22,7 +23,6 @@ http:
     - https://cast.home-assistant.io
 
 cloud:
-
 
 history: 
   exclude:
