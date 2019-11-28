@@ -7,9 +7,6 @@ homeassistant:
   time_zone: Europe/Amsterdam
   customize: !include customize.yaml
   auth_providers:
-   - type: trusted_networks
-     trusted_networks:
-       - 192.168.1.10/32
    - type: homeassistant
   whitelist_external_dirs:
     - /config/video
@@ -67,14 +64,16 @@ evohome:
   password: !secret honeywell_pass
   scan_interval: 600
 
-rflink:
-  port: /dev/ttyUSB0
+#rflink:
+#  port: /dev/ttyUSB0
 
 map:
 
 tts:
   - platform: google_translate
     service_name: google_say
+    base_url: http://192.168.1.79:8123
+    
 
 xiaomi_aqara:
   discovery_retry: 10
@@ -87,6 +86,16 @@ vacuum:
     host: 192.168.1.34
     token: !secret miiotoken
 
+remote: 
+  - platform: xiaomi_miio
+    host: 192.168.1.152
+    name: "livingroom remote"
+    token: !secret miiotoken_ir1
+    commands:
+      turn_on_tv:
+        command:
+          - raw: mc5mswlk0mEyAEKbzCWTIAjwCGmwBFTGYTMAjgLIAR4CPwI9AI8AjwNcA+8BHwEfCG6cTWYTCWB1eAR4dXBV+BHoCPAWQAj4I/gI+F74H3gI+Aj4CPh1eHD4NnjUeEh4MfgI/MphAA==
+    
 octoprint:
     host: 192.168.1.75
     api_key: !secret octo-api

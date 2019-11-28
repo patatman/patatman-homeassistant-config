@@ -480,6 +480,9 @@
   - condition: state
     entity_id: sun.sun
     state: below_horizon
+  - condition: state
+    entity_id: input_boolean.bedtime
+    state: 'off'
   action:
   - data:
       entity_id: light.hallway_3
@@ -620,7 +623,7 @@
   alias: Tensorflow voordeur
   trigger:
   - event_data: {}
-    event_type: voordeur_motion
+    event_type: zijdeur_motion
     platform: event
   condition: []
   action:
@@ -685,14 +688,10 @@
 - id: '1557406766787'
   alias: Alarm on_away
   trigger:
-  - entity_id: device_tracker.mi9_miphone_3
+  - entity_id: device_tracker.mi9_miphone_2
     from: Home
     platform: state
     to: Away
-  - entity_id: input_boolean.bedtime
-    from: 'off'
-    platform: state
-    to: 'on'
   condition: []
   action:
   - data:
@@ -954,7 +953,6 @@
   - data:
       entity_id: switch.sonoff_basic_relay, switch.tradfri_outlet
     service: switch.turn_off
-
 - id: '1568203353202'
   alias: Vacuum start
   trigger:
@@ -1094,4 +1092,80 @@
   - data:
       entity_id: alarm_control_panel.home_alarm
     service: alarm_control_panel.alarm_trigger
-
+- id: '1572170315856'
+  alias: Alarm_armed_notification
+  description: ''
+  trigger:
+  - entity_id: alarm_control_panel.home_alarm
+    platform: state
+    to: armed_away
+  condition: []
+  action:
+  - data:
+      entity_id: media_player.googlehome7582
+      message: Alarm is armed
+    service: tts.google_say
+- id: '1572304385431'
+  alias: Lights off sunrise
+  description: ''
+  trigger:
+  - entity_id: sun.sun
+    from: below_horizon
+    platform: state
+    to: above_horizon
+  condition: []
+  action:
+  - data:
+      entity_id: all
+    service: light.turn_off
+  - data:
+      entity_id: switch.sonoff_basic_relay, switch.tradfri_outlet
+    service: switch.turn_off
+- id: '1573077284376'
+  alias: Telegram - Warmtedeken status
+  description: ''
+  trigger:
+  - event_data:
+      text: warmtedeken status
+    event_type: telegram_text
+    platform: event
+  - event_data:
+      text: Warmte deken status
+    event_type: telegram_text
+    platform: event
+  - event_data:
+      text: Warmtedeken status
+    event_type: telegram_text
+    platform: event
+  condition: []
+  action:
+  - data:
+      message: Warmtedeken is {{ states('switch.plug_158d00039c1489') }}
+    service: telegram_bot.send_message
+- id: '1573077586824'
+  alias: Warmtedeken - autoshutoff
+  description: ''
+  trigger:
+  - entity_id: switch.plug_158d00039c1489
+    for: '1:30:00'
+    from: 'off'
+    platform: state
+    to: 'on'
+  condition: []
+  action:
+  - data:
+      entity_id: switch.plug_158d00039c1489
+    service: switch.turn_off
+- id: '1573465670179'
+  alias: Telegram - Tesla charging stopped
+  description: ''
+  trigger:
+  - entity_id: switch.eve_charger_switch
+    from: 'on'
+    platform: state
+    to: 'off'
+  condition: []
+  action:
+  - data:
+      message: Tesla stopped charging
+    service: telegram_bot.send_message
