@@ -14,6 +14,13 @@ Basic Home Assistant config, with regular updates
 [![GitHub Last Commit](https://img.shields.io/github/last-commit/patatman/patatman-homeassistant-config.svg)](https://img.shields.io/github/last-commit/patatman/patatman-homeassistant-config.svg)
 [![HA Version](https://img.shields.io/badge/Home%20Assistant-0.84.6-blue.svg)](https://img.shields.io/badge/Home%20Assistant-0.84.6-blue.svg)
 
+## Naming convention
+
+Zigbee naming scheme:
+`<room>_<location>_<type>_<nr>` e.g. `livingroom_couch_light_1` or `office_window_sensor`
+
+It is possible for sensor not having a Number, for instance the Office window only has 1 door/window sensor so naming should be kept short as possible. 
+
 ## Installation
 First clone the repo: 
 ```
