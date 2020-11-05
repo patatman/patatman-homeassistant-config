@@ -1,0 +1,86 @@
+esphome:
+  name: weerhuisje
+  platform: ESP8266
+  board: nodemcuv2
+
+wifi:
+  ssid: "...."
+  password: "...."
+  ap:
+    ssid: "Weerhuisje AP"
+    password: "...."
+  reboot_timeout: 1min
+  power_save_mode: none
+  manual_ip:
+    static_ip: 192.168.x.x
+    gateway: 192.168.x.x
+    subnet: 255.255.255.0
+
+captive_portal:
+
+logger:
+
+# Enable Home Assistant API
+api:
+
+ota:
+
+time:
+  - platform: homeassistant
+    id: homeassistant_time
+    timezone: Europe/Amsterdam
+
+# Enable UART for SDS011
+uart:
+  rx_pin: D1
+  tx_pin: D2
+  baud_rate: 9600
+
+# Enable i2c for BME280
+i2c:
+  sda: D5
+  scl: D6
+  scan: true
+
+sensor:
+  - platform: sds011
+    pm_2_5:
+      name: "Particulate Matter <2.5µm Concentration"
+    pm_10_0:
+      name: "Particulate Matter <10.0µm Concentration"
+    update_interval: 30min
+
+  - platform: bme280
+    update_interval: 60s
+    address: 0x76
+    temperature:
+      name: "BME280 Temperature"
+    pressure:
+      name: "BME280 Pressure"
+    humidity:
+      name: "BME280 Humidity"
+  - platform: uptime
+    name: "Weerhuisje uptime"
+    update_interval: 60s
+  - platform: wifi_signal
+    name: "Weerhuisje WiFi signaal"
+    update_interval: 60s
+
+binary_sensor:
+  - platform: status
+    name: "Weerhuisje Status"
+
+text_sensor:
+  - platform: wifi_info
+    ip_address:
+      name: Weerhuisje IP Address
+    ssid:
+      name: Weerhuisje Connected SSID
+    bssid:
+      name: Weerhuisje Connected BSSID
+  - platform: version
+    name: Weerhuisje Version
+
+switch:
+  - platform: restart
+    name: "Weerhuisje Restart"
