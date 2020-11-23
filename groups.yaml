@@ -7,13 +7,11 @@
 #     - group.upstairs
 
   livingroom:
-    view: yes
     name: Livingroom
     entities:
       - light.kitchen
       - group.livingroom_group
   upstairs:
-    view: yes
     name: Upstairs
     entities:
       - group.bathroom_group
@@ -23,37 +21,25 @@
     entities:
       - group.bathroom_group
   kitchen:
-    view: yes
     name: Kitchen
     entities:
-      - light.tradfri_bulb_gu10_w_400lm_10
-      - light.tradfri_bulb_gu10_w_400lm_9
-      - light.kitchen
+      - light.0x000b57fffee6d100_light
+      - light.0x90fd9ffffe71aa29_light
 
   bathroom_group:
     name: "Bathroom lights"
     entities:
-      - light.bathroom1
-      - light.bathroom2
-      - light.bathroom3
+      - light.0x90fd9ffffe08e345_light
+      - light.0x90fd9ffffe6d296e_light
+      - light.0x000b57fffec2a885_light
   livingroom_group:
      name: Livingroom_group
      entities:
-       - light.tradfri_bulb_e27_w_opal_1000lm_2
-       - light.window_light
-       - light.rode_lamp
-       - switch.tradfri_outlet
+       - light.livingroom_couch_light_light
+       - light.0x90fd9ffffe00ef0c_light
+       - light.livingroom_red_light_light
        - switch.sonoff_basic_relay
 
-  solarinverter: 
-    name: "solar inverter"
-    entities:
-      - sensor.energy_today
-      - sensor.energy_total
-      - sensor.time_today
-      - sensor.time_total
-      - sensor.inverter_temperature
-      - sensor.inverter_state
   motion:
     name: motion
     entities:
@@ -86,29 +72,34 @@
       - sensor.pws_temp_c
       - sensor.pws_uv
 
+  bedroom_lights:
+    name: "Bedroom lights"
+    entities:
+      - light.0xccccccfffe2c31f7_light
+      - light.0xccccccfffec13e57_light
   office_lights:
     name: "Office lights"
     entities:
-      - light.officeleft
-      - light.officeright
+      - light.0x90fd9ffffe353e1f_light
+      - light.0x90fd9ffffe35b677_light
   kitchenspots:
     name: Kitchenspots
     entities:
-      - light.kitchen1
-      - light.kitchen2
+      - light.0x90fd9ffffe71aa29_light
+      - light.0x000b57fffee6d100_light
 
   upstairs_spots:
     name: upstairspots
     entities: 
-      - light.hallway1
-      - light.hallway2
+      - light.0x90fd9ffffe3490c2_light
+      - light.0x90fd9ffffe08e2a7_light
      
   hallway:
     name: hallway
     entities:
-      - light.tradfri_bulb_gu10_w_400lm_11
-      - light.tradfri_bulb_gu10_w_400lm_12
-      - light.hallway_3
+      - light.0x000b57fffed62b55_light
+      - switch.staircase_window_light_relay
+      - light.0x90fd9ffffe6e9514_light
   meter_readings:
     name: "Meter readings"
     entities:
@@ -121,17 +112,17 @@
   outside_doors:
     name: "outside doors"
     entities:
-      - binary_sensor.door_window_sensor_158d000394c404
-      - binary_sensor.door_window_sensor_158d0003943047
-      - binary_sensor.door_window_sensor_158d0003eef6c2
-      - binary_sensor.door_window_sensor_158d0003ef08d2
-      - binary_sensor.door_window_sensor_158d0003ef1b45
-      - binary_sensor.door_window_sensor_158d0003eefd8d
+      - binary_sensor.back_hallway_outside_door_sensor_contact
+      - binary_sensor.bedroom_outside_door_sensor_contact
+      - binary_sensor.garage_garden_door_sensor_contact
+      - binary_sensor.garage_outside_door_sensor_contact
+      - binary_sensor.0x00158d0003eef6c2_contact
+      - binary_sensor.basement_window_sensor_contact
   outside_windows:
     name: "windows"
     entities:
-      - binary_sensor.door_window_sensor_158d0003973604
-      - binary_sensor.door_window_sensor_158d0003d4bad5
-      - binary_sensor.door_window_sensor_158d0003eefd7f
-      - binary_sensor.door_window_sensor_158d0003ef1b45
-
+      - binary_sensor.livingroom_fireplace_window_sensor_contact
+      - binary_sensor.bathroom_window_sensor_contact
+      - binary_sensor.bedroom_window_door_sensor_contact
+      - binary_sensor.office_window_sensor_contact
+      - binary_sensor.basement_window_sensor_contact

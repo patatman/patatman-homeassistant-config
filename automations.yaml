@@ -9,7 +9,6 @@
   id: 20429983fd4f462f90561dd4cddf43c3
 - alias: Falcon Animation Speed
   initial_state: true
-  hide_entity: false
   trigger:
   - platform: state
     entity_id: input_slider.falcon_animation_speed
@@ -19,62 +18,18 @@
       topic: light/falcon/set
       payload: '{"transition":{{ trigger.to_state.state | int }}}'
   id: ea5948cf7c4e44c0a5399d18f84421cf
-- id: '1519381563349'
-  alias: Doorbell(Nighttime)
-  trigger:
-  - entity_id: binary_sensor.door_window_sensor_158d0002254184
-    from: 'on'
-    platform: state
-    to: 'off'
-  condition:
-  - condition: state
-    entity_id: sun.sun
-    state: below_horizon
-  action:
-  - data:
-      gw_mac: 78:11:DC:B2:77:10
-      ringtone_id: '10'
-    service: xiaomi_aqara.play_ringtone
-  - data:
-      message: Er staat iemand voor de deur
-      title: Deurbel
-    service: notify.ios_iphone_pim
-  - data:
-      message: Er staat iemand voor de deur
-      title: Deurbel
-    service: notify.pushbullet_2
-  - data:
-      entity_id: media_player.googlehome0631
-      media_content_id: http://www.orangefreesounds.com/wp-content/uploads/2017/07/Ding-dong-chime.mp3
-      media_content_type: music
-    service: media_player.play_media
-- id: '1519385245869'
-  alias: Doorbell(Daytime)
-  trigger:
-  - entity_id: binary_sensor.door_window_sensor_158d0002254184
-    from: 'on'
-    platform: state
-    to: 'off'
-  condition:
-  - condition: state
-    entity_id: sun.sun
-    state: above_horizon
-  action:
-  - data:
-      message: Er staat iemand voor de deur
-      title: Deurbel
-    service: notify.ios_iphone_pim
 - id: '1519760782392'
-  alias: Motion hallway (on)
+  alias: Motion hallway-downstairs (on)
   trigger:
-  - entity_id: binary_sensor.motion_sensor_158d0001a92381
+  - entity_id: binary_sensor.hallway_downstairs_door_motion_occupancy
     from: 'off'
     platform: state
     to: 'on'
   condition:
-  - condition: state
-    entity_id: sun.sun
-    state: below_horizon
+  - condition: numeric_state
+    entity_id: sensor.downstairs_hallway_ceiling_lux_illuminance_lux
+    attribute: illuminance_lux
+    below: '4'
   - condition: state
     entity_id: input_boolean.bedtime
     state: 'off'
@@ -82,10 +37,15 @@
   - data:
       entity_id: group.hallway
     service: light.turn_on
+  - type: turn_on
+    device_id: e729bea001b411eb933ded68b48ae16d
+    entity_id: switch.staircase_window_light_relay
+    domain: switch
+  mode: single
 - id: '1519760817306'
-  alias: Motion hallway (off)
+  alias: Motion hallway-downstairs (off)
   trigger:
-  - entity_id: binary_sensor.motion_sensor_158d0001a92381
+  - entity_id: binary_sensor.hallway_downstairs_door_motion_occupancy
     from: 'on'
     platform: state
     to: 'off'
@@ -94,10 +54,15 @@
   - data:
       entity_id: group.hallway
     service: light.turn_off
+  - type: turn_off
+    device_id: e729bea001b411eb933ded68b48ae16d
+    entity_id: switch.staircase_window_light_relay
+    domain: switch
+  mode: single
 - id: '1520200724100'
-  alias: Motion hallway morning (on)
+  alias: Motion hallway-downstairs morning (on)
   trigger:
-  - entity_id: binary_sensor.motion_sensor_158d0001e56350
+  - entity_id: binary_sensor.hallway_downstairs_door_motion_occupancy
     from: 'off'
     platform: state
     to: 'on'
@@ -112,53 +77,45 @@
   - data:
       entity_id: group.livingroom
     service: light.turn_on
-- action:
-  - data:
-      entity_id: light.frondoor
-    service: light.turn_on
-  alias: Frontdoor
-  condition: []
-  trigger:
-  - entity_id: sun.sun
-    from: above_horizon
-    platform: state
-    to: below_horizon
-  id: '15202007345100'
-- action:
-  - data:
-      entity_id: light.sonoff_basement
-    service: light.turn_on
+  mode: single
+- id: '1520251495193'
   alias: Basement light on
-  condition: []
-  id: '1520251495193'
   trigger:
-  - entity_id: binary_sensor.door_window_sensor_158d0002254443
+  - entity_id: binary_sensor.basement_door_sensor_contact
     from: 'off'
     platform: state
     to: 'on'
-- action:
+  condition: []
+  action:
   - data:
       entity_id: light.sonoff_basement
-    service: light.turn_off
+    service: light.turn_on
+  mode: single
+- id: '1520251539017'
   alias: Basement light off
-  condition: []
-  id: '1520251539017'
   trigger:
-  - entity_id: binary_sensor.door_window_sensor_158d0002254443
+  - entity_id: binary_sensor.basement_door_sensor_contact
     from: 'on'
     platform: state
     to: 'off'
+  condition: []
+  action:
+  - data:
+      entity_id: light.sonoff_basement
+    service: light.turn_off
+  mode: single
 - id: '1528109786675'
   alias: Motion kitchen (on)
   trigger:
-  - entity_id: binary_sensor.motion_sensor_158d0001e55662
+  - entity_id: binary_sensor.0x00158d0001e55662_occupancy
     from: 'off'
     platform: state
     to: 'on'
   condition:
-  - condition: state
-    entity_id: sun.sun
-    state: below_horizon
+  - condition: numeric_state
+    entity_id: sensor.downstairs_hallway_ceiling_lux_illuminance_lux
+    below: '4'
+    attribute: illuminance_lux
   - condition: state
     entity_id: input_boolean.bedtime
     state: 'off'
@@ -166,10 +123,11 @@
   - data:
       entity_id: group.kitchenspots
     service: light.turn_on
+  mode: single
 - id: '1528109853713'
   alias: Motion kitchen (off)
   trigger:
-  - entity_id: binary_sensor.motion_sensor_158d0001e55662
+  - entity_id: binary_sensor.0x00158d0001e55662_occupancy
     from: 'on'
     platform: state
     to: 'off'
@@ -178,17 +136,19 @@
   - data:
       entity_id: group.kitchenspots
     service: light.turn_off
+  mode: single
 - id: '1528823416468'
   alias: Motion upstairs (on)
   trigger:
-  - entity_id: binary_sensor.motion_sensor_158d0001e56350
+  - entity_id: binary_sensor.hallway_upstairs_bedroom_motion_occupancy
     from: 'off'
     platform: state
     to: 'on'
   condition:
-  - condition: state
-    entity_id: sun.sun
-    state: below_horizon
+  - condition: numeric_state
+    entity_id: sensor.downstairs_hallway_ceiling_lux_illuminance_lux
+    below: '4'
+    attribute: illuminance_lux
   - condition: state
     entity_id: input_boolean.bedtime
     state: 'off'
@@ -196,10 +156,11 @@
   - data:
       entity_id: group.upstairs_spots
     service: light.turn_on
+  mode: single
 - id: '1528823457733'
   alias: Motion upstairs (off)
   trigger:
-  - entity_id: binary_sensor.motion_sensor_158d0001e56350
+  - entity_id: binary_sensor.hallway_upstairs_bedroom_motion_occupancy
     from: 'on'
     platform: state
     to: 'off'
@@ -208,72 +169,17 @@
   - data:
       entity_id: group.upstairs_spots
     service: light.turn_off
-- action:
-  - data:
-      entity_id: group.bathroom_group
-    service: light.toggle
-  alias: Badkamer linkerknop
-  condition: []
-  id: '1529253871562'
-  trigger:
-  - event_data:
-      entity_id: binary_sensor.wall_switch_left_158d0001e06eb2
-      event_type: single
-    event_type: xiaomi_aqara.click
-    platform: event
-- id: '1542658779581'
-  alias: Upstairs Xiaomi
-  trigger:
-  - entity_id: binary_sensor.motion_sensor_158d0001e56350
-    from: 'off'
-    platform: state
-    to: 'on'
-  condition:
-  - condition: state
-    entity_id: input_boolean.bedtime
-    state: 'on'
-  action:
-  - data:
-      brightness: '120'
-      color_name: red
-      entity_id: light.gateway_light_7811dcb27710
-    service: light.turn_on
-- id: '1542658864921'
-  alias: Upstairs Xiaomi off
-  trigger:
-  - entity_id: binary_sensor.motion_sensor_158d0001e56350
-    from: 'on'
-    platform: state
-    to: 'off'
-  condition: []
-  action:
-  - data:
-      entity_id: light.gateway_light_7811dcb27710
-    service: light.turn_off
-- id: '1544304881668'
-  alias: Cover button left(downstairs)
-  trigger:
-  - event_data:
-      entity_id: binary_sensor.wall_switch_left_158d0001e0a3f6
-      event_type: single
-    event_type: xiaomi_aqara.click
-    platform: event
-  condition: []
-  action:
-  - alias: ''
-    data:
-      entity_id: cover.livingroom_roller
-    service: cover.close_cover
+  mode: single
 - id: '1544305094328'
-  alias: Rolluiken omhoog
+  alias: Shutters_time_open
   trigger:
   - at: 07:00
     platform: time
   condition: []
   action:
-  - data:
-      entity_id: group.all_covers
+  - entity_id: cover.livingroom_roller
     service: cover.open_cover
+  mode: single
 - id: '1546196514195'
   alias: Octoprint-led
   trigger:
@@ -298,111 +204,60 @@
   - data:
       entity_id: light.kossel_light
     service: light.turn_off
-- id: '1546896384028'
-  alias: Cover button right(downstairs)
-  trigger:
-  - event_data:
-      entity_id: binary_sensor.wall_switch_right_158d0001e0a3f6
-      event_type: single
-    event_type: xiaomi_aqara.click
-    platform: event
-  condition: []
-  action:
-  - data:
-      entity_id: cover.livingroom_roller
-    service: cover.open_cover
-- id: '1546896429811'
-  alias: Cover button both(downstairs)
-  trigger:
-  - event_data:
-      entity_id: binary_sensor.wall_switch_both_158d0001e0a3f6
-      event_type: single
-    event_type: xiaomi_aqara.click
-    platform: event
-  condition: []
-  action:
-  - data:
-      entity_id: cover.livingroom_roller
-    service: cover.stop_cover
-- id: '1547412893560'
-  alias: Bathroom right-button
-  trigger:
-  - event_data:
-      entity_id: binary_sensor.wall_switch_right_158d0001e06eb2
-      event_type: single
-    event_type: xiaomi_aqara.click
-    platform: event
-  condition: []
-  action:
-  - data:
-      brightness: '30'
-      entity_id: light.bathroom2
-    service: light.turn_on
-  - data:
-      brightness: '30'
-      entity_id: light.bathroom3
-    service: light.turn_on
-- id: '1547413011732'
-  alias: Bathroom button both
-  trigger:
-  - event_data:
-      entity_id: binary_sensor.wall_switch_both_158d0001e06eb2
-      event_type: single
-    event_type: xiaomi_aqara.click
-    platform: event
-  condition: []
-  action:
-  - data:
-      entity_id: group.bathroom_group
-    service: light.turn_off
 - id: '1548364073868'
-  alias: Cover office left
+  alias: office_shutter_left-button
   trigger:
-  - event_data:
-      entity_id: binary_sensor.wall_switch_left_158d000312d1f1
-      event_type: single
-    event_type: xiaomi_aqara.click
-    platform: event
+  - platform: device
+    domain: mqtt
+    device_id: c68ac6c3ffe511ea90e64de2f15089ab
+    type: click
+    subtype: left
+    discovery_id: 0x00158d000312d335 click_left
   condition:
   - condition: state
-    entity_id: binary_sensor.door_window_sensor_158d0001e5be31
+    entity_id: binary_sensor.office_window_sensor_contact
     state: 'off'
   action:
   - data:
       entity_id: cover.office_roller
     service: cover.close_cover
+  mode: single
 - id: '1548364189711'
-  alias: Cover office right
+  alias: office_shutter_right-button
   trigger:
-  - event_data:
-      entity_id: binary_sensor.wall_switch_right_158d000312d1f1
-      event_type: single
-    event_type: xiaomi_aqara.click
-    platform: event
+  - platform: device
+    domain: mqtt
+    device_id: c68ac6c3ffe511ea90e64de2f15089ab
+    type: action
+    subtype: single_right
+    discovery_id: 0x00158d000312d335 action_single_right
   condition: []
   action:
   - data:
       entity_id: cover.office_roller
     service: cover.open_cover
+  mode: single
 - id: '1548364252800'
-  alias: Cover office both
+  alias: office_shutter_both-buttons
   trigger:
-  - event_data:
-      entity_id: binary_sensor.wall_switch_both_158d000312d1f1
-      event_type: single
-    event_type: xiaomi_aqara.click
-    platform: event
+  - platform: device
+    domain: mqtt
+    device_id: c68ac6c3ffe511ea90e64de2f15089ab
+    type: click
+    subtype: both
+    discovery_id: 0x00158d000312d335 click_both
   condition: []
   action:
   - data:
       entity_id: cover.office_roller
     service: cover.stop_cover
+  mode: single
 - id: '1550564308364'
   alias: Telegram bot that reply pong to ping
   trigger:
   - event_data:
-      text: ping
-    event_type: telegram_text
+      command: /ping
+    event_type: telegram_command
     platform: event
   - event_data:
       text: Ping
@@ -410,8 +265,9 @@
     platform: event
   condition: []
   action:
-  - data:
+  - data_template:
       message: pong
+      target: '{{ trigger.event.data.chat_id }}'
     service: telegram_bot.send_message
 - id: '1550565595309'
   alias: Telegram bot status
@@ -423,6 +279,10 @@
   - event_data:
       text: Status
     event_type: telegram_text
+    platform: event
+  - event_data:
+      telegram_command: /status
+    event_type: telegram_command
     platform: event
   condition: []
   action:
@@ -456,6 +316,7 @@
         hours. {% endif %} {% if state_attr ("vacuum.miep", "main_brush_left") < 2
         %} The vacuum sensors need to be cleaned in {{state_attr ("vacuum.miep", "main_brush_left")}}
         hours. {% endif %} '
+      target: '{{ trigger.event.data.chat_id }}'
     service: telegram_bot.send_message
 - id: '1550695640677'
   alias: Telegram cleaning
@@ -472,43 +333,50 @@
 - id: '1550697141393'
   alias: Motion stairs(on)
   trigger:
-  - entity_id: binary_sensor.motion_sensor_158d0001e52649
+  - entity_id: binary_sensor.stairs_window_motion_occupancy
     from: 'off'
     platform: state
     to: 'on'
   condition:
-  - condition: state
-    entity_id: sun.sun
-    state: below_horizon
+  - condition: numeric_state
+    entity_id: sensor.downstairs_hallway_ceiling_lux_illuminance_lux
+    attribute: illuminance_lux
+    below: '4'
   - condition: state
     entity_id: input_boolean.bedtime
     state: 'off'
   action:
-  - data:
-      entity_id: light.hallway_3
-    service: light.turn_on
+  - service: switch.turn_on
+    data: {}
+    entity_id: switch.staircase_window_light_relay
+  mode: single
 - id: '1550697179004'
   alias: Motion stairs (off)
   trigger:
-  - entity_id: binary_sensor.motion_sensor_158d0001e52649
+  - entity_id: binary_sensor.stairs_window_motion_occupancy
     from: 'on'
     platform: state
     to: 'off'
   condition: []
   action:
-  - data:
-      entity_id: light.hallway_3
-    service: light.turn_off
+  - service: switch.turn_off
+    data: {}
+    entity_id: switch.staircase_window_light_relay
+  mode: single
 - id: '1550872980640'
   alias: Reset bedtime
   trigger:
-  - at: 05:00
+  - at: 06:00
     platform: time
   condition: []
   action:
   - data:
       entity_id: input_boolean.bedtime
     service: input_boolean.turn_off
+  - data:
+      code: !secret alarm_pin
+    entity_id: alarm_control_panel.home_alarm
+    service: alarm_control_panel.alarm_disarm
 - id: '1553538719582'
   alias: Switch to dark theme
   trigger:
@@ -531,12 +399,12 @@
   condition: []
   action:
   - data:
-      name: clear
+      name: clear2
     service: frontend.set_theme
 - id: '1553543612290'
   alias: Tesla home lights
   trigger:
-  - entity_id: device_tracker.tesla_model_s_5yjsa7e28gf140866_location_tracker
+  - entity_id: device_tracker.tesla_model_s_140866_location_tracker
     from: not_home
     platform: state
     to: home
@@ -544,6 +412,9 @@
   - condition: state
     entity_id: sun.sun
     state: below_horizon
+  - condition: state
+    entity_id: person.joyce
+    state: Away
   action:
   - data:
       entity_id: group.livingroom_group
@@ -551,6 +422,7 @@
   - data:
       entity_id: group.livingroom_group
     service: switch.turn_on
+  mode: single
 - id: '1554283978472'
   alias: Printing done
   trigger:
@@ -581,24 +453,32 @@
       text: Printer status
     event_type: telegram_text
     platform: event
+  - event_data:
+      command: /print_status
+    event_type: telegram_command
+    platform: event
   condition: []
   action:
   - data:
       entity_id: camera.octoprint
       filename: /config/www/tmpimage/printer_status.jpg
     service: camera.snapshot
-  - data:
+  - data_template:
       message: Job is at {{ states('sensor.octoprint_job_percentage') }}%
+      target: '{{ trigger.event.data.chat_id }}'
     service: telegram_bot.send_message
-  - data:
+  - data_template:
       message: 'expected time remaining is: {{states(''sensor.octoprint_time_remaining_format'')
         }}'
+      target: '{{ trigger.event.data.chat_id }}'
     service: telegram_bot.send_message
-  - data:
+  - data_template:
       message: 'And here''s a picture of the printbed:'
+      target: '{{ trigger.event.data.chat_id }}'
     service: telegram_bot.send_message
-  - data:
+  - data_template:
       file: /config/www/tmpimage/printer_status.jpg
+      target: '{{ trigger.event.data.chat_id }}'
     service: telegram_bot.send_photo
 - id: '1554312554261'
   alias: Telegram Alarm
@@ -623,19 +503,13 @@
   alias: Tensorflow voordeur
   trigger:
   - event_data: {}
-    event_type: zijdeur_motion
+    event_type: voordeur_motion
     platform: event
   condition: []
   action:
   - data:
       entity_id: image_processing.tensorflow_voordeur
     service: image_processing.scan
-  - data:
-      duration: 5
-      entity_id: camera.voordeur_streaming
-      filename: /config/video/voordeur_video.mp4
-      lookback: 5
-    service: camera.record
 - id: '1554564859672'
   alias: TensorFlow zijdeur
   trigger:
@@ -644,15 +518,8 @@
     platform: event
   condition: []
   action:
-  - data:
-      entity_id: image_processing.tensorflow_zijdeur
+  - entity_id: image_processing.tensorflow_zijdeur
     service: image_processing.scan
-  - data:
-      duration: 5
-      entity_id: camera.zijdeur_streaming
-      filename: /config/video/zijdeur_video.mp4
-      lookback: 5
-    service: camera.record
 - id: '1554790197597'
   alias: Tensorflow notification voordeur
   trigger:
@@ -661,6 +528,10 @@
   condition:
   - condition: template
     value_template: '{{ trigger.to_state.state |int > 0 }}'
+  - condition: template
+    value_template: "{% set scan = state_attr(\"image_processing.tensorflow_voordeur\"\
+      ,\"summary\").keys() %}\n{% for item in scan %}\n  {% if item == 'person' %}\n\
+      \    {{ True }}\n  {% endif %}\n{% endfor %}"
   action:
   - data:
       message: '{{ state_attr(''image_processing.tensorflow_voordeur'',''matches'').keys()|list|unique|list|join('',
@@ -677,6 +548,10 @@
   condition:
   - condition: template
     value_template: '{{ trigger.to_state.state |int > 0 }}'
+  - condition: template
+    value_template: "{% set scan = state_attr(\"image_processing.tensorflow_zijdeur\"\
+      ,\"summary\").keys() %}\n{% for item in scan %}\n  {% if item == 'person' %}\n\
+      \    {{ True }}\n  {% endif %}\n{% endfor %}"
   action:
   - data:
       message: '{{ state_attr(''image_processing.tensorflow_zijdeur'',''matches'').keys()|list|unique|list|join('',
@@ -698,46 +573,76 @@
       message: Alarm is set - Phone away
     service: telegram_bot.send_message
 - id: '1558271669699'
-  alias: Welcome home Pim
+  alias: Livingroom_anouncement_morning
   trigger:
-  - entity_id: binary_sensor.sleutels_pim_3
-    from: 'off'
-    platform: state
-    to: 'on'
-  condition: []
+  - type: motion
+    platform: device
+    device_id: 42e0ba26ffe711ea9d13cd2f01ae623c
+    entity_id: binary_sensor.hallway_downstairs_door_motion_occupancy
+    domain: binary_sensor
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 0
+  condition:
+  - type: is_motion
+    condition: device
+    device_id: 1421a140ffe711eaa1f1219d64a00720
+    entity_id: binary_sensor.stairs_window_motion_occupancy
+    domain: binary_sensor
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 0
+  - condition: time
+    after: '6:00'
+    before: '10:00'
   action:
+  - data:
+      volume_level: 0.4
+    entity_id: media_player.nestaudio2567
+    service: media_player.volume_set
   - data_template:
-      entity_id: media_player.livingroom
-      message: ' {% if now().strftime("%H")|int < 12 %} Good morning, {% elif now().strftime("%H")|int
-        < 18 %} Good afternoon, {% else %} Good evening, {% endif %}
+      entity_id: media_player.nestaudio2567
+      message: '{% if now().strftime("%H")|int < 12 %} Goedemorgen, {% elif now().strftime("%H")|int
+        < 18 %} Goedemiddag, {% else %} Goedeavond, {% endif %} Het is nu buiten {{
+        states ("sensor.weerhuisje_temperature") | int }} graden.
 
-        The current weather is {{ states ("weather.dark_sky") }}, with a temperature
-        of {{ state_attr ("weather.dark_sky", "temperature" )| int }} degrees.
+        De woonkamer temperatuur is {{ state_attr ("climate.woonkamer", "current_temperature"
+        )|int }} graden.
 
-        The current livingroom temperature is {{ state_attr ("climate.woonkamer",
-        "current_temperature" )|int }} degrees.
+        {% if is_state ("sensor.circulus_berkel_vandaag", "None") %}  {% else %} Vandaag
+        moet {{ states ("sensor.circulus_berkel_vandaag")}} aan de weg. {% endif %}
+        {% if is_state ("sensor.circulus_berkel_morgen", "None") %}  {% else %} Morgen
+        wordt {{ states ("sensor.circulus_berkel_morgen")}} opgehaald. {% endif %}
 
-        The solar panels produced {{ states ("sensor.energy_today").split(".").0 }}
-        Kilowatthours today.
+        De zonnepanelen hebben {{ states ("sensor.saj_today_yield_2") }} Kilowat opgebracht
+        vandaag.
 
-        {% if is_state ("binary_sensor.door_window_sensor_158d0002133b59", "on") %}
-        Reminder, The bedroom window is open. {% endif %}
+        {% if is_state ("binary_sensor.bedroom_window_door_sensor_contact", "on")
+        and state_attr ("weather.openweathermap", "temperature") < 10  %} Het raam
+        op de slaapkamer staat open, en buiten is het koud {% endif %}
+
+        {% if is_state ("group.outside_doors", "on") %} Waarschuwing! Er staat een
+        buitendeur open {% endif %}
 
         {% if state_attr ("vacuum.miep", "clean_stop").strftime("%d") == now().strftime("%d")
-        %} Vacuum finished today at {{ state_attr ("vacuum.miep", "clean_stop").strftime("%H:%M")}}.
-        {% else %} Vacuum did not clean, last run was {{state_attr ("vacuum.miep",
+        %} Miep heeft vandaag gereden om {{ state_attr ("vacuum.miep", "clean_stop").strftime("%H:%M")}}.
+        {% else %} Miep heeft nog niet gereden, de laatste keer was {{state_attr ("vacuum.miep",
         "clean_stop").strftime("%A, %d %B")}}. {% endif %}
 
-        {% if state_attr ("vacuum.miep", "sensor_dirty_left") < 2 %} The vacuum sensors
-        need to be cleaned in {{state_attr ("vacuum.miep", "sensor_dirty_left")}}
-        hours. {% endif %} {% if state_attr ("vacuum.miep", "filter_left") < 2 %}
-        The vacuum sensors need to be cleaned in {{state_attr ("vacuum.miep", "filter_left")}}
-        hours. {% endif %} {% if state_attr ("vacuum.miep", "side_brush_left") < 2
-        %} The vacuum sensors need to be cleaned in {{state_attr ("vacuum.miep", "side_brush_left")}}
-        hours. {% endif %} {% if state_attr ("vacuum.miep", "main_brush_left") < 2
-        %} The vacuum sensors need to be cleaned in {{state_attr ("vacuum.miep", "main_brush_left")}}
-        hours. {% endif %} '
-    service: tts.google_say
+        {% if state_attr ("vacuum.miep", "sensor_dirty_left") < 2 %} De sensors van
+        Miep moeten schoongemaakt worden in {{state_attr ("vacuum.miep", "sensor_dirty_left")}}
+        uur. {% endif %} {% if state_attr ("vacuum.miep", "filter_left") < 2 %} Het
+        filter van Miep moet schoongemaakt worden binnen {{state_attr ("vacuum.miep",
+        "filter_left")}} uur. {% endif %} {% if state_attr ("vacuum.miep", "side_brush_left")
+        < 2 %} De zijborstel van Miep moet vervangen worden in {{state_attr ("vacuum.miep",
+        "side_brush_left")}} uur. {% endif %} {% if state_attr ("vacuum.miep", "main_brush_left")
+        < 2 %} De hoofdborstel van Miep moet vervangen worden in {{state_attr ("vacuum.miep",
+        "main_brush_left")}} uur. {% endif %} Dat waren alle meldingen, fijne dag
+        verder! '
+    service: tts.microsoft_say
+  mode: single
 - id: '1558274783849'
   alias: IFTT
   trigger:
@@ -747,49 +652,20 @@
     platform: event
   condition: []
   action:
-    service_template: '{{ trigger.event.data.service }}'
-    data_template:
+  - data_template:
       entity_id: '{{ trigger.event.data.entity_id }}'
+    service_template: '{{ trigger.event.data.service }}'
 - id: '1558275473307'
   alias: Washing Machine
   trigger:
   - platform: webhook
-    webhook_id: washing-machine
+    webhook_id: washing-machine-1
   condition: []
   action:
   - data:
-      message: Hello webhook
+      message: Wasmachine klaar!
+      target: '-366369357'
     service: telegram_bot.send_message
-- id: '1558359147797'
-  alias: Good morning
-  trigger:
-  - entity_id: light.bathroom1
-    from: 'off'
-    platform: state
-    to: 'on'
-  condition:
-  - after: '5:00'
-    before: '12:00'
-    condition: time
-  action:
-  - data:
-      entity_id: media_player.googlehome7582
-      volume_level: '0.2'
-    service: media_player.volume_set
-  - service: tts.google_say
-    data_template:
-      entity_id: media_player.bedroom_speaker
-      message: ' {% if now().strftime("%H")|int < 12 %} Good morning, {% elif now().strftime("%H")|int
-        < 18 %} Good afternoon, {% else %} Good evening, {% endif %}
-
-        The current weather is {{ states ("weather.dark_sky") }} with a temperature
-        of {{ state_attr ("weather.dark_sky", "temperature" )| int }} degrees.
-
-        {% if is_state ("calendar.containers", "on") %} {{ state_attr ("calendar.containers",
-        "message") }}. {% endif %} {% if is_state ("binary_sensor.door_window_sensor_158d0002133b59",
-        "on") %} The bedroom window is still open. {% endif %}
-
-        '
 - id: '1560369534592'
   alias: Tensorflow schuur
   trigger:
@@ -810,8 +686,9 @@
   - condition: template
     value_template: '{{ trigger.to_state.state |int > 0 }}'
   - condition: template
-    value_template: '{{ state_attr("image_processing.tensorflow_schuur","summary").values()|list|join|int
-      > 3 }}'
+    value_template: "{% set scan = state_attr(\"image_processing.tensorflow_schuur\"\
+      ,\"summary\").keys() %}\n{% for item in scan %}\n  {% if item == 'person' %}\n\
+      \    {{ True }}\n  {% endif %}\n{% endfor %}"
   action:
   - data:
       message: '{{ state_attr(''image_processing.tensorflow_schuur'',''matches'').keys()|list|unique|list|join('',
@@ -820,30 +697,6 @@
   - data:
       file: /config/video/schuur_latest.jpg
     service: telegram_bot.send_photo
-- id: '1560587437401'
-  alias: Telegram Wolfje thuis
-  trigger:
-  - entity_id: binary_sensor.pet_wolfje
-    from: 'off'
-    platform: state
-    to: 'on'
-  condition: []
-  action:
-  - data:
-      message: 'Wolfje is thuis! '
-    service: telegram_bot.send_message
-- id: '1560587629167'
-  alias: Telegram wolfje buiten
-  trigger:
-  - entity_id: binary_sensor.pet_wolfje
-    from: 'on'
-    platform: state
-    to: 'off'
-  condition: []
-  action:
-  - data:
-      message: Wolfje is buiten
-    service: telegram_bot.send_message
 - id: '1560587782912'
   alias: Telegram Wolfje
   trigger:
@@ -874,33 +727,6 @@
         chillen. {% elif is_state ("binary_sensor.pet_wolfje", "off") %} Wolfje is
         buiten chillen. {% endif %}'
     service: telegram_bot.send_message
-- id: '1563109920161'
-  alias: Pim presence home
-  trigger:
-  - entity_id: device_tracker.192_168_1_17_a4_50_46_72_c6_82
-    from: not_home
-    platform: state
-    to: home
-  - entity_id: device_tracker.192_168_1_16_a4_50_46_72_c6_82
-    from: not_home
-    platform: state
-    to: home
-  - entity_id: device_tracker.192_168_1_17_a4_50_46_72_c6_82
-    from: not_home
-    platform: state
-    to: home
-  - entity_id: device_tracker.192_168_1_18_a4_50_46_72_c6_82
-    from: not_home
-    platform: state
-    to: home
-  condition:
-  - condition: state
-    entity_id: input_boolean.pim_present
-    state: 'off'
-  action:
-  - data:
-      entity_id: input_boolean.pim_present
-    service: input_boolean.turn_on
 - id: '1563110835430'
   alias: Pim location Office
   trigger:
@@ -910,32 +736,6 @@
   condition: []
   action:
   - service: input_select.set_options
-- id: '1563737151086'
-  alias: Xiaomi No bedtime
-  trigger:
-  - event_data:
-      click_type: double
-      entity_id: binary_sensor.switch_158d000210ec53
-    event_type: xiaomi_aqara.click
-    platform: event
-  condition: []
-  action:
-  - data:
-      entity_id: input_boolean.bedtime
-    service: input_boolean.turn_off
-- id: '1563737219038'
-  alias: Xiaomi Bedtime
-  trigger:
-  - event_data:
-      click_type: single
-      entity_id: binary_sensor.switch_158d000210ec53
-    event_type: xiaomi_aqara.click
-    platform: event
-  condition: []
-  action:
-  - data:
-      entity_id: input_boolean.bedtime
-    service: input_boolean.turn_on
 - id: '1563738157502'
   alias: Bedtime toggle
   trigger:
@@ -948,7 +748,7 @@
     condition: time
   action:
   - data:
-      entity_id: group.all_lights
+      entity_id: all
     service: light.turn_off
   - data:
       entity_id: switch.sonoff_basic_relay, switch.tradfri_outlet
@@ -956,59 +756,41 @@
 - id: '1568203353202'
   alias: Vacuum start
   trigger:
-  - at: '15:00'
+  - at: 05:00
     platform: time
   condition: []
   action:
   - data:
       entity_id: vacuum.miep
     service: vacuum.start
-- id: '1569349947942'
-  alias: Status unicorn - outside door
-  trigger:
-  - entity_id: input_boolean.bedtime
-    from: 'off'
-    platform: state
-    to: 'on'
-  condition:
-  - condition: state
-    entity_id: group.outside_doors
-    state: 'on'
-  action:
-  - data:
-      brightness_pct: '100'
-      color_name: red
-      effect: None
-      entity_id: light.status_unicorn
-    service: light.turn_on
+  mode: single
 - id: '1570045586111'
-  alias: Alarm_off_xiaomi
+  alias: Alarm_off_xiaomi_single_button
   trigger:
-  - event_data:
-      click_type: double
-      entity_id: binary_sensor.switch_158d000210ec53
-    event_type: xiaomi_aqara.click
-    platform: event
+  - platform: device
+    domain: mqtt
+    device_id: e65fd062009211ebbb18594153c78b9e
+    type: action
+    subtype: single
+    discovery_id: 0x00158d000210ec53 action_single
+  - platform: device
+    domain: mqtt
+    device_id: e65fd062009211ebbb18594153c78b9e
+    type: action
+    subtype: double
+    discovery_id: 0x00158d000210ec53 action_double
   condition: []
   action:
   - data:
-      message: Alarm off - Via Xiaomi
-    service: telegram_bot.send_message
-- id: '1570046889964'
-  alias: Alarm_on_xiaomi
-  trigger:
-  - event_data:
-      click_type: single
-      entity_id: binary_sensor.switch_158d000210ec53
-    event_type: xiaomi_aqara.click
-    platform: event
-  condition: []
-  action:
+      message: Alarm off - Via Xiaomi button
+    service: notify.mobile_app_pixel_5
   - data:
-      message: Alarm on - Xiaomi button
-    service: telegram_bot.send_message
+      code: !secret alarm_pin
+    entity_id: alarm_control_panel.home_alarm
+    service: alarm_control_panel.alarm_disarm
+  mode: single
 - id: '1570048484459'
-  alias: Rolluik woonkamer omlaag
+  alias: Livingroom_shutter_close-time
   trigger:
   - at: '22:00'
     platform: time
@@ -1017,8 +799,9 @@
   - data:
       entity_id: cover.livingroom_roller
     service: cover.close_cover
+  mode: single
 - id: '1570048669274'
-  alias: Rolluik kantoor - omlaag
+  alias: Office_shutter_close-time
   trigger:
   - at: '22:00'
     platform: time
@@ -1030,17 +813,19 @@
   - data:
       entity_id: cover.office_roller
     service: cover.close_cover
+  mode: single
 - id: '1570544659081'
   alias: Motion-stairs
   trigger:
-  - entity_id: binary_sensor.motion_sensor_158d0001e52649
+  - entity_id: binary_sensor.stairs_window_motion_occupancy
     from: 'off'
     platform: state
     to: 'on'
   condition:
-  - condition: state
-    entity_id: sun.sun
-    state: below_horizon
+  - condition: numeric_state
+    entity_id: sensor.downstairs_hallway_ceiling_lux_illuminance_lux
+    attribute: illuminance_lux
+    below: '4'
   - condition: state
     entity_id: input_boolean.bedtime
     state: 'off'
@@ -1048,6 +833,7 @@
   - data:
       entity_id: group.livingroom_group
     service: light.turn_on
+  mode: single
 - id: '1570546499913'
   alias: Alarm_away_trigger-wolfje-away
   trigger:
@@ -1069,10 +855,11 @@
     state: armed_away
   - condition: state
     entity_id: binary_sensor.pet_wolfje
-    state: away
+    state: 'off'
   action:
   - data:
       entity_id: alarm_control_panel.home_alarm
+    entity_id: alarm_control_panel.home_alarm
     service: alarm_control_panel.alarm_trigger
 - id: '1570600594310'
   alias: Alarm_away_trigger-wolfje-home
@@ -1087,10 +874,11 @@
     state: armed_away
   - condition: state
     entity_id: binary_sensor.pet_wolfje
-    state: Home
+    state: 'on'
   action:
   - data:
       entity_id: alarm_control_panel.home_alarm
+    entity_id: alarm_control_panel.home_alarm
     service: alarm_control_panel.alarm_trigger
 - id: '1572170315856'
   alias: Alarm_armed_notification
@@ -1102,14 +890,25 @@
   condition: []
   action:
   - data:
-      entity_id: media_player.googlehome7582
-      message: Alarm is armed
-    service: tts.google_say
+      data:
+        actions:
+        - action: URI
+          title: Disable alarm
+          uri: /lovelace/14
+        - action: URI
+          title: Show camera
+          uri: /lovelace/7
+        clickAction: /lovelace/14
+        importance: high
+      message: ALARM SET
+    service: notify.notify
+  mode: single
 - id: '1572304385431'
   alias: Lights off sunrise
   description: ''
   trigger:
   - entity_id: sun.sun
+    for: 00:50:00
     from: below_horizon
     platform: state
     to: above_horizon
@@ -1169,3 +968,808 @@
   - data:
       message: Tesla stopped charging
     service: telegram_bot.send_message
+- id: '1575391309146'
+  alias: alarm - door or window unlocked
+  description: ''
+  trigger:
+  - entity_id: group.outside_doors
+    from: 'off'
+    platform: state
+    to: 'on'
+  - entity_id: group.outside_windows
+    from: 'off'
+    platform: state
+    to: 'on'
+  - entity_id: binary_sensor.door_window_sensor_158d0003d4bad5
+    from: 'off'
+    platform: state
+    to: 'on'
+  condition:
+  - condition: or
+    conditions:
+    - condition: state
+      entity_id: alarm_control_panel.home_alarm
+      state: armed_night
+    - condition: state
+      entity_id: alarm_control_panel.home_alarm
+      state: armed_away
+  action:
+  - data:
+      code: !secret alarm_pin
+    entity_id: alarm_control_panel.home_alarm
+    service: alarm_control_panel.alarm_trigger
+- id: '1575391403592'
+  alias: Alarm - Disabled notifcation
+  description: ''
+  trigger:
+  - entity_id: alarm_control_panel.home_alarm
+    platform: state
+    to: disarmed
+  condition: []
+  action:
+  - data:
+      data:
+        actions:
+        - action: URI
+          title: Disable alarm
+          uri: /lovelace/14
+        - action: URI
+          title: Show camera
+          uri: /lovelace/7
+        clickAction: /lovelace/14
+        color: green
+        importance: urgent
+      message: ALARM DISABLED
+    service: notify.notify
+  mode: single
+- id: '1575446439629'
+  alias: Alarm - Triggered
+  description: ''
+  trigger:
+  - entity_id: alarm_control_panel.home_alarm
+    platform: state
+    to: triggered
+  condition: []
+  action:
+  - data:
+      data:
+        actions:
+        - action: URI
+          title: Disable alarm
+          uri: /lovelace/14
+        - action: URI
+          title: Show camera
+          uri: /lovelace/7
+        clickAction: /lovelace/14
+        color: red
+        importance: urgent
+        persistent: true
+        sticky: 'true'
+        tag: alarm_triggered
+      message: ALARM TRIGGERED
+    service: notify.notify
+  - data: {}
+    entity_id: script.alarm_triggered_loop
+    service: script.turn_on
+  mode: single
+- id: '1577900607880'
+  alias: notify PMD
+  description: ''
+  trigger:
+  - entity_id: sensor.circulus_berkel_pmd
+    platform: state
+    to: today
+  condition: []
+  action:
+  - data:
+      message: PMD opgehaald vandaag
+    service: telegram_bot.send_message
+- id: '1577913648866'
+  alias: telegram_joyce
+  description: ''
+  trigger:
+  - event_data:
+      telegram_command: /joyce
+    event_type: telegram_command
+    platform: event
+  condition: []
+  action:
+  - data:
+      message: Volgens Pim is Joyce de allerliefste van de hele wereld! <3
+      target: '{{ trigger.event.data.chat_id }}'
+    service: telegram_bot.send_message
+- id: '1578220478076'
+  alias: Telegram - away notification
+  description: ''
+  trigger:
+  - entity_id: device_tracker.mi9_miphone_2
+    platform: state
+    to: not_home
+  - entity_id: device_tracker.unifi_48_2c_a0_6e_96_9a_default
+    platform: state
+    to: not_home
+  condition:
+  - condition: or
+    conditions:
+    - condition: state
+      entity_id: device_tracker.mi9_miphone_2
+      state: not_home
+    - condition: state
+      entity_id: device_tracker.unifi_48_2c_a0_6e_96_9a_default
+      state: not_home
+  action:
+  - data:
+      message: Iedereen is van huis
+      target: '-366369357'
+    service: telegram_bot.send_message
+  - data:
+      message: Ik zet het alarm aan
+      target: '-366369357'
+    service: telegram_bot.send_message
+- id: '1578303536719'
+  alias: Telegram - Afval notificatie
+  description: ''
+  trigger:
+  - entity_id: sensor.circulus_berkel_vandaag
+    platform: state
+  condition: []
+  action:
+  - data_template:
+      message: 'De volgende container moet aan de weg: {{states(''sensor.circulus_berkel_vandaag'')
+        }}'
+      target: '-366369357'
+    service: telegram_bot.send_message
+- id: '1578303726240'
+  alias: Telegram - Afval notificatie morgen
+  description: ''
+  trigger:
+  - entity_id: sensor.circulus_berkel_morgen
+    platform: state
+  condition: []
+  action:
+  - data_template:
+      message: Morgen moet de *{{states('sensor.circulus_berkel_morgen') }}* container
+        aan de weg
+      parse_mode: markdown
+      target: '-366369357'
+    service: telegram_bot.send_message
+- id: '1579032386207'
+  alias: Alarm - disarmed stop chaos
+  description: ''
+  trigger:
+  - entity_id: alarm_control_panel.home_alarm
+    platform: state
+    to: disarmed
+  condition: []
+  action:
+  - entity_id: script.alarm_triggered_sound
+    service: script.turn_off
+  - data:
+      data:
+        tag: alarm_triggered
+      message: clear_notification
+    service: notify.notify
+  mode: single
+- id: '1580711235303'
+  alias: Telegram - Stookalert notificatie
+  description: ''
+  trigger:
+  - entity_id: binary_sensor.stookalert
+    from: 'off'
+    platform: state
+    to: 'on'
+  condition: []
+  action:
+  - data:
+      message: Stookalert! Geen openhaard aan
+      target: '-366369357'
+    service: telegram_bot.send_message
+  - data:
+      message: https://www.rivm.nl/stookalert
+      target: '-366369357'
+    service: telegram_bot.send_message
+- id: '1595162633275'
+  alias: Alarm - Pim away (person)
+  description: ''
+  trigger:
+  - entity_id: person.pim
+    from: home
+    platform: state
+    to: not_home
+  condition:
+  - condition: state
+    entity_id: person.joyce
+    state: not_home
+  action:
+  - data:
+      code: !secret alarm_pin
+    entity_id: alarm_control_panel.home_alarm
+    service: alarm_control_panel.alarm_arm_away
+  - data:
+      message: Alarm is set - Pim Phone away
+    service: telegram_bot.send_message
+  mode: single
+- id: '1595162713841'
+  alias: Alarm - Joyce away (person)
+  description: ''
+  trigger:
+  - entity_id: person.joyce
+    from: home
+    platform: state
+    to: not_home
+  condition:
+  - condition: state
+    entity_id: person.pim
+    state: not_home
+  action:
+  - data:
+      code: !secret alarm_pin
+    entity_id: alarm_control_panel.home_alarm
+    service: alarm_control_panel.alarm_arm_away
+  - data:
+      message: Alarm is set - Phone away Joyce
+    service: telegram_bot.send_message
+  mode: single
+- id: '1595164637608'
+  alias: Alarm - Pim home (person)
+  description: Disable alarm
+  trigger:
+  - entity_id: person.pim
+    event: enter
+    platform: zone
+    zone: zone.home
+  condition: []
+  action:
+  - data:
+      code: !secret alarm_pin
+    entity_id: alarm_control_panel.home_alarm
+    service: alarm_control_panel.alarm_disarm
+  - data:
+      message: Alarm uit - Pim Thuis
+    service: telegram_bot.send_message
+  mode: single
+- id: '1595164763010'
+  alias: Alarm - Joyce home (person)
+  description: ''
+  trigger:
+  - entity_id: person.joyce
+    event: enter
+    platform: zone
+    zone: zone.home
+  condition: []
+  action:
+  - data:
+      code: !secret alarm_pin
+    entity_id: alarm_control_panel.home_alarm
+    service: alarm_control_panel.alarm_disarm
+  - data:
+      message: Alarm disabled Joyce thuis
+    service: telegram_bot.send_message
+- id: '1596118187471'
+  alias: Joyce_kamer_motion
+  description: ''
+  trigger:
+  - device_id: ce5b788e27f24084a7f402225bef2639
+    domain: binary_sensor
+    entity_id: binary_sensor.joyce_kamermotion_ias_zone
+    platform: device
+    type: motion
+  condition:
+  - condition: state
+    entity_id: sun.sun
+    state: above_horizon
+  - condition: state
+    entity_id: input_boolean.bedtime
+    state: 'off'
+  action:
+  - data: {}
+    entity_id: light.joyce_lights_zha_group_0x0004
+    service: light.turn_on
+- id: '1596118397645'
+  alias: Joyce_kamer_no-motion
+  description: ''
+  trigger:
+  - device_id: ce5b788e27f24084a7f402225bef2639
+    domain: binary_sensor
+    entity_id: binary_sensor.joyce_kamermotion_ias_zone
+    platform: device
+    type: no_motion
+  condition: []
+  action:
+  - data: {}
+    entity_id: light.joyce_lights_zha_group_0x0004
+    service: light.turn_off
+- id: '1596404278732'
+  alias: bathroom lights on remote
+  description: ''
+  trigger:
+  - platform: device
+    domain: mqtt
+    device_id: 63d99fbdffe411ea85ccdde3325f23da
+    type: click
+    subtype: left
+    discovery_id: 0x00158d000312d1f1 click_left
+  condition: []
+  action:
+  - service: light.toggle
+    data: {}
+    entity_id: group.bathroom_group
+  mode: single
+- id: '1596404317177'
+  alias: bathroom lights right remote
+  description: ''
+  trigger:
+  - platform: device
+    domain: mqtt
+    device_id: 63d99fbdffe411ea85ccdde3325f23da
+    type: action
+    subtype: single_right
+    discovery_id: 0x00158d000312d1f1 action_single_right
+  condition: []
+  action:
+  - service: script.increase_brightness
+    data:
+      group: light.bathroom_lights_group
+  mode: single
+- id: '1597693630222'
+  alias: Presence - Joyce home lights on
+  description: ''
+  trigger:
+  - entity_id: person.joyce
+    event: enter
+    platform: zone
+    zone: zone.home
+  condition:
+  - condition: state
+    entity_id: sun.sun
+    state: below_horizon
+  action:
+  - data: {}
+    entity_id: group.livingroom_group
+    service: light.turn_on
+- id: '1599301836567'
+  alias: bedroom remote light on
+  description: ''
+  trigger:
+  - platform: device
+    domain: mqtt
+    device_id: 0a027d84ffe511ea83fff5ae080283f1
+    type: action
+    subtype: button_1_single
+    discovery_id: 0x04cf8cdf3c797ed6 action_button_1_single
+  condition: []
+  action:
+  - type: turn_on
+    device_id: 28a0bd4affe311eaa1ef035d5294c8e4
+    entity_id: light.0xccccccfffe2c31f7_light
+    domain: light
+    brightness_pct: 30
+  - type: turn_on
+    device_id: 2929ccb5ffe311ea9ea58d6828011474
+    entity_id: light.0xccccccfffec13e57_light
+    domain: light
+    brightness_pct: 30
+  mode: single
+- id: '1599302671502'
+  alias: bedroom remote light off
+  description: ''
+  trigger:
+  - platform: device
+    domain: mqtt
+    device_id: 0a027d84ffe511ea83fff5ae080283f1
+    type: action
+    subtype: button_2_single
+    discovery_id: 0x04cf8cdf3c797ed6 action_button_2_single
+  condition: []
+  action:
+  - type: turn_off
+    device_id: 28a0bd4affe311eaa1ef035d5294c8e4
+    entity_id: light.0xccccccfffe2c31f7_light
+    domain: light
+  - type: turn_off
+    device_id: 2929ccb5ffe311ea9ea58d6828011474
+    entity_id: light.0xccccccfffec13e57_light
+    domain: light
+  mode: single
+- id: '1599302893374'
+  alias: bedroom remote curtain open
+  description: ''
+  trigger:
+  - platform: device
+    domain: mqtt
+    device_id: 0a027d84ffe511ea83fff5ae080283f1
+    type: action
+    subtype: button_3_single
+    discovery_id: 0x04cf8cdf3c797ed6 action_button_3_single
+  condition: []
+  action:
+  - data: {}
+    entity_id: cover.blinds_bedroom
+    service: cover.open_cover
+  mode: single
+- id: '1599302932492'
+  alias: bedroom remote curtain close
+  description: ''
+  trigger:
+  - platform: device
+    domain: mqtt
+    device_id: 0a027d84ffe511ea83fff5ae080283f1
+    type: action
+    subtype: button_4_single
+    discovery_id: 0x04cf8cdf3c797ed6 action_button_4_single
+  condition: []
+  action:
+  - data: {}
+    entity_id: cover.blinds_bedroom
+    service: cover.close_cover
+  mode: single
+- id: '1599303016275'
+  alias: bedroom remote bedtime on
+  description: ''
+  trigger:
+  - platform: device
+    domain: mqtt
+    device_id: 0a027d84ffe511ea83fff5ae080283f1
+    type: action
+    subtype: button_5_single
+    discovery_id: 0x04cf8cdf3c797ed6 action_button_5_single
+  condition: []
+  action:
+  - data: {}
+    entity_id: input_boolean.bedtime
+    service: input_boolean.turn_on
+  - data: {}
+    entity_id: cover.blinds_bedroom
+    service: cover.close_cover
+  - data:
+      code: !secret alarm_pin
+    entity_id: alarm_control_panel.home_alarm
+    service: alarm_control_panel.alarm_arm_night
+  mode: single
+- id: '1599303055558'
+  alias: bedroom remote alarm off
+  description: ''
+  trigger:
+  - platform: device
+    domain: mqtt
+    device_id: 0a027d84ffe511ea83fff5ae080283f1
+    type: action
+    subtype: button_6_single
+    discovery_id: 0x04cf8cdf3c797ed6 action_button_6_single
+  condition: []
+  action:
+  - data:
+      code: !secret alarm_pin
+    entity_id: alarm_control_panel.home_alarm
+    service: alarm_control_panel.alarm_disarm
+  mode: single
+- id: '1600083490750'
+  alias: Alarm - Pending
+  description: ''
+  trigger:
+  - entity_id: alarm_control_panel.home_alarm
+    platform: state
+    to: pending
+  condition: []
+  action:
+  - data:
+      data:
+        actions:
+        - action: URI
+          title: Disable alarm
+          uri: /lovelace/14
+        - action: URI
+          title: Show camera
+          uri: /lovelace/7
+        clickAction: /lovelace/14
+        color: yellow
+        importance: urgent
+        sticky: 'true'
+      message: ALARM PENDING
+    service: notify.notify
+  - data: {}
+    entity_id: script.livingroom_tv_power
+    service: script.turn_on
+  mode: single
+- id: '1600622771142'
+  alias: bathroom lights off remote
+  description: ''
+  trigger:
+  - platform: device
+    domain: mqtt
+    device_id: 63d99fbdffe411ea85ccdde3325f23da
+    type: click
+    subtype: both
+    discovery_id: 0x00158d000312d1f1 click_both
+  condition: []
+  action:
+  - type: turn_off
+    device_id: e5641237ffe311eabd90b7bffba9f1a8
+    entity_id: light.0x90fd9ffffe08e345_light
+    domain: light
+  - type: turn_off
+    device_id: e5565579ffe311ea90b8a7117101b7ff
+    entity_id: light.0x90fd9ffffe6d296e_light
+    domain: light
+  - type: turn_off
+    device_id: 1c1051ecffe411ea868f19cf1dae2ae2
+    entity_id: light.0x000b57fffec2a885_light
+    domain: light
+  mode: single
+- id: '1600872209625'
+  alias: office_light_first-button
+  description: ''
+  trigger:
+  - device_id: 34274952fca411ea9dd94d3af6f6b71f
+    domain: zha
+    platform: device
+    type: remote_button_short_press
+    subtype: button_1
+  condition: []
+  action:
+  - type: toggle
+    device_id: a0f4207c5f4742b5b11d5d796757219d
+    entity_id: light.office_2
+    domain: light
+  mode: single
+- id: '1601127151317'
+  alias: livingroom_couch_left-button
+  description: ''
+  trigger:
+  - platform: device
+    domain: mqtt
+    device_id: 2dc67a79ffd711ea8110e1f65861fbf9
+    type: click
+    subtype: left
+    discovery_id: 0x00158d0001e0a3f6 click_left
+  condition: []
+  action:
+  - data: {}
+    service: cover.close_cover
+    entity_id: cover.livingroom_roller
+  mode: single
+- id: '1601127175527'
+  alias: livingroom_couch_right-button
+  description: ''
+  trigger:
+  - platform: device
+    domain: mqtt
+    device_id: 2dc67a79ffd711ea8110e1f65861fbf9
+    type: click
+    subtype: right
+    discovery_id: 0x00158d0001e0a3f6 click_right
+  condition: []
+  action:
+  - data: {}
+    service: cover.open_cover
+    entity_id: cover.livingroom_roller
+  mode: single
+- id: '1601127199750'
+  alias: livingroom_couch_both-buttons
+  description: ''
+  trigger:
+  - platform: device
+    domain: mqtt
+    device_id: 2dc67a79ffd711ea8110e1f65861fbf9
+    type: click
+    subtype: both
+    discovery_id: 0x00158d0001e0a3f6 click_both
+  condition: []
+  action:
+  - data: {}
+    service: cover.stop_cover
+    entity_id: cover.livingroom_roller
+  mode: single
+- id: '1602451111484'
+  alias: bedroom_heatingblanket
+  description: ''
+  trigger:
+  - platform: device
+    type: turned_on
+    device_id: d07e52b2028811eb8217e782afd1d358
+    entity_id: switch.bedroom_heating_blanket_switch
+    domain: switch
+    for:
+      hours: 1
+      minutes: 0
+      seconds: 0
+  condition: []
+  action:
+  - type: turn_off
+    device_id: d07e52b2028811eb8217e782afd1d358
+    entity_id: switch.bedroom_heating_blanket_switch
+    domain: switch
+  mode: single
+- id: '1602451112768'
+  alias: bedroom_heatingblanket
+  description: ''
+  trigger:
+  - platform: device
+    type: turned_on
+    device_id: d07e52b2028811eb8217e782afd1d358
+    entity_id: switch.bedroom_heating_blanket_switch
+    domain: switch
+    for:
+      hours: 1
+      minutes: 0
+      seconds: 0
+  condition: []
+  action:
+  - type: turn_off
+    device_id: d07e52b2028811eb8217e782afd1d358
+    entity_id: switch.bedroom_heating_blanket_switch
+    domain: switch
+  mode: single
+- id: '1602574298377'
+  alias: Notify frontdoor open
+  description: ''
+  trigger:
+  - type: opened
+    platform: device
+    device_id: b93d1ee6ffe511eaae6795a2a5808e2d
+    entity_id: binary_sensor.0x00158d0003eef6c2_contact
+    domain: binary_sensor
+    for:
+      hours: 0
+      minutes: 5
+      seconds: 0
+  condition: []
+  action:
+  - service: notify.notify
+    data:
+      message: Frontdoor is open
+      title: Frontdoor warning
+  mode: single
+- id: '1603006641024'
+  alias: livingroom_dinner-table_left-button
+  description: ''
+  trigger:
+  - platform: device
+    domain: mqtt
+    device_id: 837b9b3006ec11ebb48335955a115863
+    type: action
+    subtype: single_left
+    discovery_id: 0x00158d0001e06eb2 action_single_left
+  condition: []
+  action:
+  - type: turn_on
+    device_id: ff5886b8110a11eb98615bd267af77b5
+    entity_id: light.livingroom_diner_table_light_light
+    domain: light
+    brightness_pct: 10
+  - condition: device
+    type: is_on
+    device_id: ff5886b8110a11eb98615bd267af77b5
+    entity_id: light.livingroom_diner_table_light_light
+    domain: light
+  - type: turn_off
+    device_id: ff5886b8110a11eb98615bd267af77b5
+    entity_id: light.livingroom_diner_table_light_light
+    domain: light
+  mode: single
+- id: '1603006686049'
+  alias: livingroom_dinner-table_right-button
+  description: ''
+  trigger:
+  - platform: device
+    domain: mqtt
+    device_id: 837b9b3006ec11ebb48335955a115863
+    type: action
+    subtype: single_right
+    discovery_id: 0x00158d0001e06eb2 action_single_right
+  condition:
+  - condition: device
+    type: is_on
+    device_id: ff5886b8110a11eb98615bd267af77b5
+    entity_id: light.livingroom_diner_table_light_light
+    domain: light
+  action:
+  - service: script.increase_brightness
+    data:
+      group: light.livingroom_diner_table_light_light
+  mode: single
+- id: '1603008059517'
+  alias: livingroom_dinner-table_both-button
+  description: ''
+  trigger:
+  - platform: device
+    domain: mqtt
+    device_id: 837b9b3006ec11ebb48335955a115863
+    type: action
+    subtype: single_both
+    discovery_id: 0x00158d0001e06eb2 action_single_both
+  condition: []
+  action:
+  - type: turn_off
+    device_id: ff5886b8110a11eb98615bd267af77b5
+    entity_id: light.livingroom_diner_table_light_light
+    domain: light
+  mode: single
+- id: '1603115111966'
+  alias: washer done notification
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: sensor.washer_washer_machine_state
+    to: stop
+  condition: []
+  action:
+  - service: notify.notify
+    data:
+      message: Washmachine klaar!
+  - service: media_player.volume_set
+    data:
+      volume_level: 0.3
+    entity_id: media_player.living_room_speaker
+  - service: tts.cloud_say
+    data:
+      entity_id: media_player.living_room_speaker
+      message: Washing machine is done.
+  mode: single
+- id: '1603793652446'
+  alias: Motion bedroom (on)
+  description: ''
+  trigger:
+  - type: motion
+    platform: device
+    device_id: 08a20835182f11eb97cae99f87a017fd
+    entity_id: binary_sensor.bedroom_tv_motion_occupancy
+    domain: binary_sensor
+  condition:
+  - condition: numeric_state
+    entity_id: sensor.downstairs_hallway_ceiling_lux_illuminance_lux
+    attribute: illuminance_lux
+    below: '4'
+  - condition: state
+    entity_id: input_boolean.bedtime
+    state: 'off'
+  action:
+  - service: light.turn_on
+    data:
+      entity_id: group.bedroom_lights
+  mode: single
+- id: '1603793679989'
+  alias: Motion bedroom (off)
+  description: ''
+  trigger:
+  - type: no_motion
+    platform: device
+    device_id: 08a20835182f11eb97cae99f87a017fd
+    entity_id: binary_sensor.bedroom_tv_motion_occupancy
+    domain: binary_sensor
+  condition: []
+  action:
+  - service: light.turn_off
+    data:
+      entity_id: group.bedroom_lights
+  mode: single
+- id: '1604930071670'
+  alias: weerhuisje_update
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: sensor.weerhuisje_temperature
+  condition: []
+  action:
+  - service: rest_command.send_luftdaten_pm
+    data: {}
+  - service: rest_command.send_luftdaten_tph
+    data: {}
+  mode: queued
+  max: 10
+- id: '1605466526525'
+  alias: Livingroom Soundbar tv
+  description: Set the Soundbar to the correct channel.
+  trigger:
+  - platform: state
+    entity_id: media_player.livingroom_tv
+    from: 'off'
+    to: 'on'
+  condition: []
+  action:
+  - service: media_player.select_source
+    data:
+      entity_id: media_player.lg_soundbar_3fb988f9_8ddf_4f72_a0fd_392653dbf76c
+      source: Optical
+    entity_id: media_player.lg_soundbar_e4b93ffd_f69a_4cab_b912_be0cc390a559
+  mode: single

@@ -1,0 +1,65 @@
+livingroom_tv_power:
+  sequence:
+  - condition: state
+    entity_id: alarm_control_panel.home_alarm
+    state: pending
+  - delay: 00:00:01
+  - data: {}
+    entity_id: script.alarm_pending_sound
+    service: script.turn_on
+  mode: single
+  alias: alarm_pending_loop
+alarm_pending_sound:
+  alias: alarm_pending_sound
+  mode: single
+  sequence:
+  - data:
+      volume_level: 0.1
+    entity_id: media_player.alarm
+    service: media_player.volume_set
+  - data:
+      media_content_id: http://192.168.1.79:8080/pending-beep.mp3
+      media_content_type: audio/mp4
+    entity_id: media_player.alarm
+    service: media_player.play_media
+  - delay: 00:00:03
+  - data: {}
+    entity_id: script.livingroom_tv_power
+    service: script.turn_on
+alarm_triggered_loop:
+  alias: alarm_triggered_loop
+  mode: single
+  sequence:
+  - condition: state
+    entity_id: alarm_control_panel.home_alarm
+    state: triggered
+  - delay: 00:00:01
+  - data: {}
+    entity_id: script.alarm_triggered_sound
+    service: script.turn_on
+alarm_triggered_sound:
+  alias: alarm_triggered_sound
+  mode: single
+  sequence:
+  - data: {}
+    entity_id: media_player.alarm
+    service: media_player.volume_up
+  - data:
+      media_content_id: http://192.168.1.79:8080/purge.m4a
+      media_content_type: audio/mp4
+    entity_id: media_player.alarm
+    service: media_player.play_media
+  - delay: 00:00:03
+  - data: {}
+    entity_id: script.alarm_triggered_loop
+    service: script.turn_on
+increase_brightness:
+  alias: increase_brightness
+  sequence:
+  - service: light.turn_on
+    data:
+      entity_id: '{{ group }}'
+      brightness: "{% set b = state_attr(group, 'brightness') %} {% if b == None %}\n\
+        \  15\n{% elif b < 20 %}\n  128\n{% elif b < 140 %}\n  255\n{% else %}\n \
+        \ 15\n{% endif %}\n"
+  mode: single

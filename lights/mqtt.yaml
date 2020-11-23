@@ -11,56 +11,56 @@
     payload_not_available: "Offline"
     retain: true
 
-  - platform: mqtt
-    schema: json
-    name: "Falcon light"
-    state_topic: "light/falcon"
-    command_topic: "light/falcon/set"
-    effect: true
-    effect_list:
-      - bpm
-      - candy cane  
-      - confetti  
-      - cyclon rainbow  
-      - dots  
-      - fire  
-      - glitter  
-      - juggle  
-      - lightning
-      - noise  
-      - police all  
-      - police one  
-      - rainbow  
-      - rainbow with glitter  
-      - ripple  
-      - sinelon  
-      - solid  
-      - twinkle  
-    brightness: true
-    rgb: true
-    optimistic: false
-    qos: 0
-
-  - platform: mqtt
-    name: "Fireplace" 
-    state_topic: "stat/sonoff2/POWER"
-    command_topic: "cmnd/sonoff2/POWER"
-    availability_topic: "tele/sonoff2/LWT"
-    qos: 1
-    payload_on: "ON"
-    payload_off: "OFF"
-    payload_available: "Online"
-    payload_not_available: "Offline"
-    retain: true
-
-  - platform: mqtt
-    name: "Hallway 3"
-    state_topic: "stat/sonoff6/POWER"
-    command_topic: "cmnd/sonoff6/POWER"
-    availability_topic: "tele/sonoff6/LWT"
-    qos: 1
-    payload_on: "ON"
-    payload_off: "OFF"
-    payload_available: "Online"
-    payload_not_available: "Offline"
-    retain: true
+    #  - platform: mqtt
+    #   schema: json
+    #    name: "Falcon light"
+    #    state_topic: "light/falcon"
+    #    command_topic: "light/falcon/set"
+    #    effect: true
+    #    effect_list:
+    #      - bpm
+    #      - candy cane  
+    #      - confetti  
+    #      - cyclon rainbow  
+    #      - dots  
+    #      - fire  
+    #      - glitter  
+    #      - juggle  
+    #      - lightning
+    #      - noise  
+    #      - police all  
+    #      - police one  
+    #      - rainbow  
+    #      - rainbow with glitter  
+    #      - ripple  
+    #      - sinelon  
+    #      - solid  
+    #      - twinkle  
+    #    brightness: true
+    #    rgb: true
+    #    optimistic: false
+    #    qos: 0
+    #
+    #  - platform: mqtt
+    #    name: "Fireplace" 
+    #    state_topic: "stat/sonoff2/POWER"
+    #    command_topic: "cmnd/sonoff2/POWER"
+    #    availability_topic: "tele/sonoff2/LWT"
+    #    qos: 1
+    #    payload_on: "ON"
+    #    payload_off: "OFF"
+    #    payload_available: "Online"
+    #    payload_not_available: "Offline"
+    #    retain: true
+    #
+    #  - platform: mqtt
+    #    name: "Hallway 3"
+    #    state_topic: "stat/sonoff6/POWER"
+    #    command_topic: "cmnd/sonoff6/POWER"
+    #    availability_topic: "tele/sonoff6/LWT"
+    #    qos: 1
+    #    payload_on: "ON"
+    #    payload_off: "OFF"
+    #    payload_available: "Online"
+    #    payload_not_available: "Offline"
+    #    retain: true

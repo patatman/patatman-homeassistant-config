@@ -1,25 +1,21 @@
 homeassistant:
   latitude: !secret lat 
   longitude: !secret long 
-  packages: !include_dir_named packages
   elevation: 430
+  packages: !include_dir_named packages
   unit_system: metric
   time_zone: Europe/Amsterdam
   customize: !include customize.yaml
   auth_providers:
    - type: homeassistant
-  whitelist_external_dirs:
+  allowlist_external_dirs:
     - /config/video
+
+default_config:
 
 recorder: 
   db_url: !secret database
   purge_keep_days: 50
-
-http:
-  cors_allowed_origins:
-    - https://cast.home-assistant.io
-
-cloud:
 
 history: 
   exclude:
@@ -30,9 +26,14 @@ history:
 stream:
 system_health:
 
+zone:
+  - name: Home
+    latitude: !secret lat
+    longitude: !secret long
+    radius: 27
+    icon: mdi:home
 frontend:
-  javascript_version: latest
-  themes: !include themes.yaml
+  themes: !include_dir_merge_named themes
 
 discovery:
 
@@ -44,20 +45,24 @@ notify:
 telegram_bot:
   - platform: polling
     api_key: !secret telegram_key
-    allowed_chat_ids: !secret telegram_id
+    allowed_chat_ids: 
+      - !secret telegram_id
+      - !secret telegram_group_id
+
+scene: !include scenes.yaml
 
 wake_on_lan:
 
+rest_command: !include includes/rest_command.yaml
+
 sun:
 logbook: 
-config:
-
 influxdb:
   host: 192.168.1.80
 
-nest:
-  client_id: !secret nest_id
-  client_secret: !secret nest_secret
+#nest:
+#  client_id: !secret nest_id
+#  client_secret: !secret nest_secret
 
 evohome:
   username: !secret honeywell_user
@@ -73,12 +78,11 @@ tts:
   - platform: google_translate
     service_name: google_say
     base_url: http://192.168.1.79:8123
-    
-
-xiaomi_aqara:
-  discovery_retry: 10
-  gateways:
-    - key: !secret aqara_password
+  - platform: microsoft
+    api_key: !secret azure_tts_api
+    region: westeurope
+    language: nl-nl
+    type: ColetteNeural
 
 vacuum:
   - platform: xiaomi_miio
@@ -86,18 +90,9 @@ vacuum:
     host: 192.168.1.34
     token: !secret miiotoken
 
-remote: 
-  - platform: xiaomi_miio
-    host: 192.168.1.152
-    name: "livingroom remote"
-    token: !secret miiotoken_ir1
-    commands:
-      turn_on_tv:
-        command:
-          - raw: mc5mswlk0mEyAEKbzCWTIAjwCGmwBFTGYTMAjgLIAR4CPwI9AI8AjwNcA+8BHwEfCG6cTWYTCWB1eAR4dXBV+BHoCPAWQAj4I/gI+F74H3gI+Aj4CPh1eHD4NnjUeEh4MfgI/MphAA==
-    
 octoprint:
-    host: 192.168.1.75
+    host: 192.168.1.132
+    port: 5000
     api_key: !secret octo-api
 
 ffmpeg:
@@ -135,14 +130,9 @@ input_number:
     max: 150
     step: 10
 
-media_player:
-  - platform: spotify
-    client_id: !secret spotify_client 
-    client_secret: !secret spotify
-    #  - platform: androidtv
-    #    name: Livingroom
-    #    host: 192.168.1.103
-    #    adbkey: /config/adbkey
+webostv:
+  host: 192.168.1.33
+  name: LG livingroom
 
 cover: !include_dir_merge_list covers
 
@@ -153,18 +143,34 @@ image_processing:
     scan_interval: 10000
     source:
 #      - entity_id: camera.voordeur
-      - entity_id: camera.schuur
       - entity_id: camera.zijdeur
     file_out:
       - "/config/video/{{ camera_entity.split('.')[1] }}_latest.jpg"
 #      - "/config/video/{{ camera_entity.split('.')[1] }}_{{ now().strftime('%Y%m%d_%H%M%S') }}.jpg"
     model:
-      graph: "/config/tensorflow/frozen_inference_graph.pb"
-      categories:
-        - person
-        - cat
-        - car
-        - dog
+      graph: "/config/tensorflow/models/efficientdet_d0_coco17_tpu-32/"
+#      categories:
+#        - person
+#        - cat
+#        - car
+#        - dog
+  - platform: tensorflow
+    scan_interval: 10000
+    source:
+#      - entity_id: camera.voordeur
+      - entity_id: camera.schuur
+    file_out:
+      - "/config/video/{{ camera_entity.split('.')[1] }}_latest.jpg"
+#      - "/config/video/{{ camera_entity.split('.')[1] }}_{{ now().strftime('%Y%m%d_%H%M%S') }}.jpg"
+    model:
+      graph: "/config/tensorflow/models/efficientdet_d0_coco17_tpu-32/"
+#      categories:
+#        - person
+#        - cat
+#        - car
+#        - dog
+      area:
+        top: 0.1
   - platform: tensorflow
     scan_interval: 10000
     source:
@@ -173,21 +179,34 @@ image_processing:
       - "/config/video/{{ camera_entity.split('.')[1] }}_latest.jpg"
 #      - "/config/video/{{ camera_entity.split('.')[1] }}_{{ now().strftime('%Y%m%d_%H%M%S') }}.jpg"
     model:
-      graph: "/config/tensorflow/frozen_inference_graph.pb"
-      categories:
-        - person
-        - cat
-        - car
-        - dog
+      graph: "/config/tensorflow/models/efficientdet_d0_coco17_tpu-32/"
+#      categories:
+#        - person
+#        - cat
+#        - car
+#        - dog
       area: 
-        top: 0.3
+        top: 0.4
 
 surepetcare:
   username: !secret surepet_user
   password: !secret surepet_pass
-  household_id: !secret surepet_household
-  flaps: [{id: 209692, name: Tuin}]
-  pets: [{id: 52825, name: Wolfje}]
+#  household_id: !secret surepet_household
+  flaps: [209692]
+  pets: [52825]
+
+binary_sensor:
+  - platform: stookalert
+    province: Gelderland
+
+# One entry per sensor node to understand when the device is online/offline and see device metadata such as IP address and settings values
+  - platform: mqtt
+    name: ESP32 A
+    state_topic: "presence_nodes/esp32_office_room_presence"
+    json_attributes_topic: "presence_nodes/esp32_office_room_presence/tele"
+    payload_on: "CONNECTED"
+    payload_off: "DISCONNECTED"
+    device_class: connectivity 
 
 tesla:
   username: !secret tesla_username
@@ -196,11 +215,6 @@ tesla:
 light: !include_dir_merge_list lights
 
 sensor: !include_dir_merge_list sensors
-
-switch:
-  - platform: wake_on_lan
-    mac_address: "70:85:c2:6c:44:f3"
-    host: 192.168.1.11
 
 input_boolean: 
   bedtime:
@@ -211,21 +225,24 @@ input_boolean:
     name: Pim Presence
     initial: on
     
-hacs:
-  token: !secret hacstoken
-
+spotify:
+  client_id: !secret spotify_id
+  client_secret: !secret spotify_secret
 
 weather:
-  - platform: darksky
-    api_key: !secret darksky
+        #  - platform: openweathermap
+        #api_key: !secret openweather
+        #mode: freedaily
     
 alarm_control_panel:
-  - platform: manual
+  - platform: manual_mqtt
+    state_topic: !secret alarm_state
+    command_topic: !secret alarm_command
     name: Home Alarm
     code: !secret alarm_pin
-    pending_time: 30
+    pending_time: 20
     delay_time: 20
-    trigger_time: 4
+    trigger_time: 120
     disarmed:
       trigger_time: 0
     armed_home:

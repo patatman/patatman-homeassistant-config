@@ -63,3 +63,8 @@
           {%- endif -%}
         {%- endif -%}
 
+    no_one_home:
+      friendly_name: 'No one is home'
+      value_template: >-
+        {{ not is_state("person.pim", "home")
+            and not is_state("person.joyce", "home") }}

@@ -1,0 +1,14 @@
+# One entry for each beacon you want to track
+  - platform: mqtt_room
+    device_id: "2F234454CF6D4A0FADF2F4911BA9FFA6-1-0" # Note that major version must match, but any minor version will be ignored
+    name: 'Phone Pim'
+    state_topic: 'room_presence'
+    timeout: 10
+    away_timeout: 15
+  - platform: mqtt_room
+    device_id: "fda50693a4e24fb1afcfc6eb07647825-5-6" # Note that major version must match, but any minor version will be ignored
+    name: 'Keys Pim'
+    state_topic: 'room_presence'
+    timeout: 20
+    away_timeout: 30
+

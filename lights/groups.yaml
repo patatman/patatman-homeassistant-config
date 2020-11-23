@@ -1,0 +1,6 @@
+- platform: group
+  name: "Bathroom lights group"
+  entities:
+    - light.0x90fd9ffffe08e345_light
+    - light.0x90fd9ffffe6d296e_light
+    - light.0x000b57fffec2a885_light
