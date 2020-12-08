@@ -63,3 +63,45 @@ increase_brightness:
         \  15\n{% elif b < 20 %}\n  128\n{% elif b < 140 %}\n  255\n{% else %}\n \
         \ 15\n{% endif %}\n"
   mode: single
+'1606902947169':
+  alias: lights_off_except
+  icon: mdi:home-lightbulb
+  fields:
+    exclude_lights:
+      description: Excluded lights as list
+  sequence:
+  - service: logbook.log
+    data_template:
+      entity_id: script.turn_off_lights
+      name: Exclude log
+      message: 'Turning of all lights except: {{ exclude_lights }}'
+  - service: light.turn_off
+    data_template:
+      entity_id: '{%- for device in states.light|rejectattr(''entity_id'',''in'',
+        exclude_lights )|rejectattr(''state'',''in'',''off'') %}{%- if loop.first
+        %}{%- else %}, {% endif %}{{ device.entity_id }}{%- if loop.last %}{% endif
+        %}{%- endfor  %}
+
+        '
+  mode: single
+switch_off_except:
+  alias: switch_off_except
+  sequence:
+  - service: logbook.log
+    data_template:
+      entity_id: script.turn_off_switch
+      name: Exclude log
+      message: 'Turning of all switches except: {{ exclude_switch }}'
+  - service: switch.turn_off
+    data_template:
+      entity_id: '{%- for device in states.switch|rejectattr(''entity_id'',''in'',
+        exclude_switches )|rejectattr(''state'',''in'',''off'') %}{%- if loop.first
+        %}{%- else %}, {% endif %}{{ device.entity_id }}{%- if loop.last %}{% endif
+        %}{%- endfor  %}
+
+        '
+  icon: mdi:home-lightbulb
+  fields:
+    exclude_switches:
+      description: Excluded switches as list
+  mode: single

@@ -37,7 +37,11 @@
      entities:
        - light.livingroom_couch_light_light
        - light.0x90fd9ffffe00ef0c_light
-       - light.livingroom_red_light_light
+       - light.livingroom_diner_table_light_light
+       - switch.livingroom_window_switch_switch
+       - switch.fireplace_basic_relay
+       - light.wled
+         #     - light.livingroom_red_light_light
        - switch.sonoff_basic_relay
 
   motion:

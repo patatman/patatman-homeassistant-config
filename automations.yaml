@@ -70,13 +70,16 @@
   - after: '6:00'
     before: '8:30'
     condition: time
-  - condition: state
-    entity_id: sun.sun
-    state: below_horizon
+  - type: is_illuminance
+    condition: device
+    device_id: a4d91cd90d4711eba5a6b50a9ba37a26
+    entity_id: sensor.downstairs_hallway_ceiling_lux_illuminance_lux
+    domain: sensor
+    below: 4
   action:
   - data:
-      entity_id: group.livingroom
-    service: light.turn_on
+      entity_id: group.livingroom_group
+    service: homeassistant.turn_on
   mode: single
 - id: '1520251495193'
   alias: Basement light on
@@ -179,6 +182,9 @@
   action:
   - entity_id: cover.livingroom_roller
     service: cover.open_cover
+  - service: cover.open_cover
+    data: {}
+    entity_id: cover.office_roller
   mode: single
 - id: '1546196514195'
   alias: Octoprint-led
@@ -404,7 +410,7 @@
 - id: '1553543612290'
   alias: Tesla home lights
   trigger:
-  - entity_id: device_tracker.tesla_model_s_140866_location_tracker
+  - entity_id: device_tracker.eve_location_tracker
     from: not_home
     platform: state
     to: home
@@ -598,6 +604,7 @@
     after: '6:00'
     before: '10:00'
   action:
+  - delay: '10'
   - data:
       volume_level: 0.4
     entity_id: media_player.nestaudio2567
@@ -655,17 +662,6 @@
   - data_template:
       entity_id: '{{ trigger.event.data.entity_id }}'
     service_template: '{{ trigger.event.data.service }}'
-- id: '1558275473307'
-  alias: Washing Machine
-  trigger:
-  - platform: webhook
-    webhook_id: washing-machine-1
-  condition: []
-  action:
-  - data:
-      message: Wasmachine klaar!
-      target: '-366369357'
-    service: telegram_bot.send_message
 - id: '1560369534592'
   alias: Tensorflow schuur
   trigger:
@@ -750,9 +746,16 @@
   - data:
       entity_id: all
     service: light.turn_off
-  - data:
-      entity_id: switch.sonoff_basic_relay, switch.tradfri_outlet
-    service: switch.turn_off
+  - service: switch.turn_off
+    data:
+      entity_id:
+      - switch.fireplace_basic_relay
+      - switch.frontdoor_switch_relay
+      - switch.livingroom_window_switch_switch
+      - switch.porch_basic_relay
+      - switch.sonoff_basic_relay
+      - switch.staircase_window_light_relay
+  mode: single
 - id: '1568203353202'
   alias: Vacuum start
   trigger:
@@ -807,7 +810,7 @@
     platform: time
   condition:
   - condition: state
-    entity_id: binary_sensor.door_window_sensor_158d0001e5be31
+    entity_id: binary_sensor.office_window_sensor_contact
     state: 'Off'
   action:
   - data:
@@ -995,7 +998,7 @@
       state: armed_away
   action:
   - data:
-      code: !secret alarm_pin
+      code: !secret alarm_pin 
     entity_id: alarm_control_panel.home_alarm
     service: alarm_control_panel.alarm_trigger
 - id: '1575391403592'
@@ -1188,6 +1191,18 @@
   - data:
       message: Alarm is set - Pim Phone away
     service: telegram_bot.send_message
+  - service: light.turn_off
+    data:
+      entity_id: all
+  - service: switch.turn_off
+    data:
+      entity_id:
+      - switch.fireplace_basic_relay
+      - switch.frontdoor_switch_relay
+      - switch.livingroom_window_switch_switch
+      - switch.porch_basic_relay
+      - switch.sonoff_basic_relay
+      - switch.staircase_window_light_relay
   mode: single
 - id: '1595162713841'
   alias: Alarm - Joyce away (person)
@@ -1209,6 +1224,18 @@
   - data:
       message: Alarm is set - Phone away Joyce
     service: telegram_bot.send_message
+  - service: light.turn_off
+    data:
+      entity_id: all
+  - service: switch.turn_off
+    data:
+      entity_id:
+      - switch.fireplace_basic_relay
+      - switch.frontdoor_switch_relay
+      - switch.livingroom_window_switch_switch
+      - switch.porch_basic_relay
+      - switch.sonoff_basic_relay
+      - switch.staircase_window_light_relay
   mode: single
 - id: '1595164637608'
   alias: Alarm - Pim home (person)
@@ -1307,9 +1334,31 @@
     discovery_id: 0x00158d000312d1f1 action_single_right
   condition: []
   action:
-  - service: script.increase_brightness
-    data:
-      group: light.bathroom_lights_group
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: group.bathroom
+        state: 'off'
+      sequence:
+      - type: turn_on
+        device_id: 1c1051ecffe411ea868f19cf1dae2ae2
+        entity_id: light.0x000b57fffec2a885_light
+        domain: light
+        brightness_pct: 10
+      - type: turn_on
+        device_id: e5641237ffe311eabd90b7bffba9f1a8
+        entity_id: light.0x90fd9ffffe08e345_light
+        domain: light
+        brightness_pct: 10
+    - conditions:
+      - condition: state
+        state: 'on'
+        entity_id: group.bathroom
+      sequence:
+      - service: script.increase_brightness
+        data:
+          group: light.bathroom_lights_group
+    default: []
   mode: single
 - id: '1597693630222'
   alias: Presence - Joyce home lights on
@@ -1566,8 +1615,8 @@
   trigger:
   - platform: device
     type: turned_on
-    device_id: d07e52b2028811eb8217e782afd1d358
-    entity_id: switch.bedroom_heating_blanket_switch
+    device_id: 01721c51feef343dbf6e6e3f45d69ee2
+    entity_id: switch.bedroom_bed_switch_l1
     domain: switch
     for:
       hours: 1
@@ -1576,28 +1625,8 @@
   condition: []
   action:
   - type: turn_off
-    device_id: d07e52b2028811eb8217e782afd1d358
-    entity_id: switch.bedroom_heating_blanket_switch
-    domain: switch
-  mode: single
-- id: '1602451112768'
-  alias: bedroom_heatingblanket
-  description: ''
-  trigger:
-  - platform: device
-    type: turned_on
-    device_id: d07e52b2028811eb8217e782afd1d358
-    entity_id: switch.bedroom_heating_blanket_switch
-    domain: switch
-    for:
-      hours: 1
-      minutes: 0
-      seconds: 0
-  condition: []
-  action:
-  - type: turn_off
-    device_id: d07e52b2028811eb8217e782afd1d358
-    entity_id: switch.bedroom_heating_blanket_switch
+    device_id: 01721c51feef343dbf6e6e3f45d69ee2
+    entity_id: switch.bedroom_bed_switch_l1
     domain: switch
   mode: single
 - id: '1602574298377'
@@ -1690,7 +1719,7 @@
   description: ''
   trigger:
   - platform: state
-    entity_id: sensor.washer_washer_machine_state
+    entity_id: sensor.washing_machine_washer_machine_state
     to: stop
   condition: []
   action:
@@ -1701,10 +1730,10 @@
     data:
       volume_level: 0.3
     entity_id: media_player.living_room_speaker
-  - service: tts.cloud_say
+  - service: tts.microsoft_say
     data:
       entity_id: media_player.living_room_speaker
-      message: Washing machine is done.
+      message: Wasmachine is klaar.
   mode: single
 - id: '1603793652446'
   alias: Motion bedroom (on)
@@ -1724,9 +1753,11 @@
     entity_id: input_boolean.bedtime
     state: 'off'
   action:
-  - service: light.turn_on
-    data:
-      entity_id: group.bedroom_lights
+  - type: turn_on
+    device_id: 0f1dc25d2c5aaf2207c5a6fc97d74a17
+    entity_id: light.office_closet_light_light
+    domain: light
+    brightness_pct: 20
   mode: single
 - id: '1603793679989'
   alias: Motion bedroom (off)
@@ -1740,8 +1771,8 @@
   condition: []
   action:
   - service: light.turn_off
-    data:
-      entity_id: group.bedroom_lights
+    data: {}
+    entity_id: light.office_closet_light_light
   mode: single
 - id: '1604930071670'
   alias: weerhuisje_update
@@ -1771,5 +1802,33 @@
     data:
       entity_id: media_player.lg_soundbar_3fb988f9_8ddf_4f72_a0fd_392653dbf76c
       source: Optical
-    entity_id: media_player.lg_soundbar_e4b93ffd_f69a_4cab_b912_be0cc390a559
+    entity_id: media_player.lg_soundbar_4def0570_64b3_47ff_b3e2_6ffb36fdf06a
+  mode: single
+- id: '1606582032363'
+  alias: Frontdoor_light_on
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: sun.sun
+    to: below_horizon
+  condition: []
+  action:
+  - type: turn_on
+    device_id: cfb95786a9b510d78ad7395f279d3f81
+    entity_id: light.frontdoor_light
+    domain: light
+    brightness_pct: 5
+  mode: single
+- id: '1606582159994'
+  alias: Frontdoor_light_off
+  description: ''
+  trigger:
+  - platform: time
+    at: '22:30'
+  condition: []
+  action:
+  - type: turn_off
+    device_id: cfb95786a9b510d78ad7395f279d3f81
+    entity_id: light.frontdoor_light
+    domain: light
   mode: single

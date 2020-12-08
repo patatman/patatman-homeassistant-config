@@ -15,7 +15,7 @@ default_config:
 
 recorder: 
   db_url: !secret database
-  purge_keep_days: 50
+  purge_keep_days: 7
 
 history: 
   exclude:
